@@ -17,7 +17,7 @@ class AuditLogServiceTest extends TestCase
         $target = User::factory()->create();
 
         $log = app(AuditLogService::class)->record(
-            eventType: 'identity.role_assigned',
+            eventType: 'role.changed',
             action: 'assign_role',
             actor: $actor,
             auditable: $target,
@@ -30,7 +30,8 @@ class AuditLogServiceTest extends TestCase
         $this->assertDatabaseHas('audit_logs', [
             'id' => $log->getKey(),
             'actor_id' => $actor->getKey(),
-            'event_type' => 'identity.role_assigned',
+            'event_type' => 'role.changed',
+            'event' => 'role.changed',
             'action' => 'assign_role',
             'auditable_type' => 'user',
             'auditable_id' => $target->getKey(),

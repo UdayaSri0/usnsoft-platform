@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Modules\AuditSecurity\Services\LoginSecurityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,11 +23,12 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request, LoginSecurityService $loginSecurityService): RedirectResponse
     {
         $request->authenticate();
 
         $request->session()->regenerate();
+        $loginSecurityService->recordSuccessfulLogin($request->user(), $request->session()->getId());
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

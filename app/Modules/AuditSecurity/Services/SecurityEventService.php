@@ -13,14 +13,18 @@ class SecurityEventService
      * @param  array<string, mixed>  $context
      */
     public function record(
-        SecurityEventType $eventType,
+        SecurityEventType|string $eventType,
         ?User $user = null,
         string $severity = 'info',
         array $context = [],
     ): SecurityEvent {
+        $resolvedEventType = $eventType instanceof SecurityEventType
+            ? $eventType->value
+            : $eventType;
+
         return SecurityEvent::query()->create([
             'user_id' => $user?->getKey(),
-            'event_type' => $eventType,
+            'event_type' => $resolvedEventType,
             'severity' => $severity,
             'ip_address' => request()?->ip(),
             'user_agent' => request()?->userAgent(),

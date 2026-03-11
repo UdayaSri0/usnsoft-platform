@@ -50,6 +50,12 @@ trait HasRolesAndPermissions
         $this->roles()->syncWithoutDetaching([
             $roleModel->getKey() => ['assigned_by' => $assignedBy],
         ]);
+
+        if (method_exists($this, 'forceFill')) {
+            $this->forceFill([
+                'is_internal' => $this->isInternalRolePresentAfterAttach($roleModel),
+            ])->save();
+        }
     }
 
     public function removeRole(Role|CoreRole|string $role): void
@@ -57,6 +63,21 @@ trait HasRolesAndPermissions
         $roleModel = $this->resolveRole($role);
 
         $this->roles()->detach($roleModel->getKey());
+
+        if (method_exists($this, 'forceFill')) {
+            $this->forceFill([
+                'is_internal' => $this->roles()->where('is_internal', true)->exists(),
+            ])->save();
+        }
+    }
+
+    private function isInternalRolePresentAfterAttach(Role $attachedRole): bool
+    {
+        if ($attachedRole->is_internal) {
+            return true;
+        }
+
+        return $this->roles()->where('is_internal', true)->exists();
     }
 
     private function resolveRole(Role|CoreRole|string $role): Role

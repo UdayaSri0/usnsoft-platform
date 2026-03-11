@@ -1,3 +1,9 @@
+## USNsoft Quick Start
+
+- Local run/testing guide: [docs/run-local.md](docs/run-local.md)
+- Auth/security foundation notes: [docs/auth-authorization-foundation.md](docs/auth-authorization-foundation.md)
+- Stage 1 uses fixed roles, granular permissions, policy-first authorization, and structured security/audit logging.
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

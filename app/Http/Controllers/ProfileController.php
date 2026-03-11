@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Modules\IdentityAccess\Models\AccountDeletionRequest;
+use App\Modules\IdentityAccess\Services\AccountLifecycleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -16,6 +18,8 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $this->authorize('view', $request->user());
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
@@ -26,13 +30,32 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $this->authorize('update', $user);
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $validated = $request->validated();
+
+        $user->fill([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $disk = config('filesystems.default', 'local');
+
+            if ($user->avatar_path) {
+                Storage::disk($disk)->delete($user->avatar_path);
+            }
+
+            $user->avatar_path = $request->file('avatar')->store('avatars', $disk);
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -40,21 +63,22 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
+    public function destroy(
+        Request $request,
+        AccountLifecycleService $accountLifecycleService,
+    ): RedirectResponse {
+        $this->authorize('create', AccountDeletionRequest::class);
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
+            'reason' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $user = $request->user();
+        $accountLifecycleService->requestDeletion(
+            user: $request->user(),
+            reason: $request->string('reason')->toString() ?: null,
+        );
 
-        Auth::logout();
-
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return Redirect::route('profile.edit')->with('status', 'deletion-requested');
     }
 }

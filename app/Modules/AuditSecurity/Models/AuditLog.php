@@ -13,6 +13,7 @@ class AuditLog extends Model
 
     protected $fillable = [
         'actor_id',
+        'event',
         'event_type',
         'action',
         'auditable_type',
@@ -24,6 +25,7 @@ class AuditLog extends Model
         'ip_address',
         'user_agent',
         'occurred_at',
+        'created_at',
     ];
 
     protected function casts(): array
@@ -34,6 +36,7 @@ class AuditLog extends Model
             'metadata' => 'array',
             'tags' => 'array',
             'occurred_at' => 'datetime',
+            'created_at' => 'datetime',
         ];
     }
 

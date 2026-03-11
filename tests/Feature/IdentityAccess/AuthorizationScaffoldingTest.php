@@ -8,6 +8,7 @@ use App\Modules\IdentityAccess\Models\Permission;
 use App\Modules\IdentityAccess\Models\Role;
 use Database\Seeders\CoreRoleSeeder;
 use Database\Seeders\PermissionScaffoldSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
@@ -21,6 +22,7 @@ class AuthorizationScaffoldingTest extends TestCase
         $this->seed([
             CoreRoleSeeder::class,
             PermissionScaffoldSeeder::class,
+            RolePermissionSeeder::class,
         ]);
 
         $superAdmin = User::factory()->create();
@@ -36,6 +38,7 @@ class AuthorizationScaffoldingTest extends TestCase
         $this->seed([
             CoreRoleSeeder::class,
             PermissionScaffoldSeeder::class,
+            RolePermissionSeeder::class,
         ]);
 
         $admin = User::factory()->create();
@@ -43,7 +46,7 @@ class AuthorizationScaffoldingTest extends TestCase
 
         $adminRole = Role::query()->where('name', CoreRole::Admin->value)->firstOrFail();
         $superAdminRole = Role::query()->where('name', CoreRole::SuperAdmin->value)->firstOrFail();
-        $assignPermission = Permission::query()->where('name', 'identity.roles.assign')->firstOrFail();
+        $assignPermission = Permission::query()->where('name', 'users.assignRoles')->firstOrFail();
 
         $admin->assignRole($adminRole, null);
         $adminRole->permissions()->syncWithoutDetaching([$assignPermission->getKey()]);

@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AccountStatus;
 use App\Enums\CoreRole;
 use App\Models\User;
 use App\Modules\IdentityAccess\Models\Role;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -42,6 +44,9 @@ class SuperAdminBootstrapSeeder extends Seeder
                 'name' => $name,
                 'password' => Hash::make($password),
                 'email_verified_at' => now(),
+                'status' => AccountStatus::Active,
+                'is_internal' => true,
+                'mfa_required_at' => CarbonImmutable::now(),
             ],
         );
 

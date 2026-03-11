@@ -4,15 +4,21 @@ namespace App\Enums;
 
 enum SecurityEventType: string
 {
-    case LoginSucceeded = 'login_succeeded';
-    case LoginFailed = 'login_failed';
-    case SuspiciousLogin = 'suspicious_login';
-    case PasswordResetRequested = 'password_reset_requested';
-    case PasswordResetCompleted = 'password_reset_completed';
-    case MfaChallengePassed = 'mfa_challenge_passed';
-    case MfaChallengeFailed = 'mfa_challenge_failed';
-    case PermissionDenied = 'permission_denied';
-    case AccountLocked = 'account_locked';
+    case LoginSuccess = 'login.success';
+    case LoginFailed = 'login.failed';
+    case LoginThrottled = 'login.throttled';
+    case LoginSuspicious = 'login.suspicious';
+    case LogoutSuccess = 'logout.success';
+    case PasswordResetRequested = 'password.reset.requested';
+    case PasswordResetCompleted = 'password.reset.completed';
+    case EmailVerificationSent = 'email.verification.sent';
+    case EmailVerificationCompleted = 'email.verification.completed';
+    case RoleChanged = 'role.changed';
+    case PermissionChanged = 'permission.changed';
+    case AccountCreated = 'account.created';
+    case AccountDeactivated = 'account.deactivated';
+    case AccountReactivated = 'account.reactivated';
+    case AccountDeletionRequested = 'account.deletion.requested';
 
     /**
      * @return list<string>

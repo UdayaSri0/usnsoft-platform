@@ -9,6 +9,7 @@ use App\Modules\IdentityAccess\Models\Role;
 use App\Modules\IdentityAccess\Services\RoleAssignmentService;
 use Database\Seeders\CoreRoleSeeder;
 use Database\Seeders\PermissionScaffoldSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -22,6 +23,7 @@ class RoleAssignmentBoundaryTest extends TestCase
         $this->seed([
             CoreRoleSeeder::class,
             PermissionScaffoldSeeder::class,
+            RolePermissionSeeder::class,
         ]);
 
         $superAdmin = User::factory()->create();
@@ -42,6 +44,7 @@ class RoleAssignmentBoundaryTest extends TestCase
         $this->seed([
             CoreRoleSeeder::class,
             PermissionScaffoldSeeder::class,
+            RolePermissionSeeder::class,
         ]);
 
         $admin = User::factory()->create();
@@ -49,7 +52,7 @@ class RoleAssignmentBoundaryTest extends TestCase
 
         $adminRole = Role::query()->where('name', CoreRole::Admin->value)->firstOrFail();
         $editorRole = Role::query()->where('name', CoreRole::Editor->value)->firstOrFail();
-        $assignPermission = Permission::query()->where('name', 'identity.roles.assign')->firstOrFail();
+        $assignPermission = Permission::query()->where('name', 'users.assignRoles')->firstOrFail();
 
         $admin->assignRole($adminRole, null);
         $adminRole->permissions()->syncWithoutDetaching([$assignPermission->getKey()]);

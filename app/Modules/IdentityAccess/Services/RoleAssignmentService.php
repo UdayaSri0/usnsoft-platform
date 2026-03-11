@@ -3,7 +3,9 @@
 namespace App\Modules\IdentityAccess\Services;
 
 use App\Enums\CoreRole;
+use App\Enums\SecurityEventType;
 use App\Models\User;
+use App\Modules\AuditSecurity\Services\SecurityEventService;
 use App\Modules\IdentityAccess\Models\Role;
 use App\Services\Audit\AuditLogService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -12,6 +14,7 @@ class RoleAssignmentService
 {
     public function __construct(
         private readonly AuditLogService $auditLogService,
+        private readonly SecurityEventService $securityEventService,
     ) {}
 
     public function assign(User $actor, User $target, Role $role): void
@@ -22,8 +25,14 @@ class RoleAssignmentService
 
         $target->assignRole($role, $actor->getKey());
 
+        $this->securityEventService->record(SecurityEventType::RoleChanged, $target, 'info', [
+            'action' => 'assigned',
+            'role' => $role->name,
+            'actor_id' => $actor->getKey(),
+        ]);
+
         $this->auditLogService->record(
-            eventType: 'identity.role_assigned',
+            eventType: SecurityEventType::RoleChanged->value,
             action: 'assign_role',
             actor: $actor,
             auditable: $target,
@@ -43,8 +52,14 @@ class RoleAssignmentService
 
         $target->removeRole($role);
 
+        $this->securityEventService->record(SecurityEventType::RoleChanged, $target, 'warning', [
+            'action' => 'removed',
+            'role' => $role->name,
+            'actor_id' => $actor->getKey(),
+        ]);
+
         $this->auditLogService->record(
-            eventType: 'identity.role_removed',
+            eventType: SecurityEventType::RoleChanged->value,
             action: 'remove_role',
             actor: $actor,
             auditable: $target,
@@ -58,7 +73,7 @@ class RoleAssignmentService
 
     public function canAssign(User $actor, User $target, Role $role): bool
     {
-        if (! $actor->hasPermission('identity.roles.assign') && ! $actor->hasRole(CoreRole::SuperAdmin)) {
+        if (! $actor->hasPermission('users.assignRoles') && ! $actor->hasRole(CoreRole::SuperAdmin)) {
             return false;
         }
 

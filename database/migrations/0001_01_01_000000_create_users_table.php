@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('mfa_enabled_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip', 45)->nullable();
+            $table->timestamp('deactivated_at')->nullable();
             $table->timestamp('deletion_requested_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

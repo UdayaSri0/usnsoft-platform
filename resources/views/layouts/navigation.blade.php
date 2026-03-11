@@ -15,6 +15,17 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">
+                        {{ __('Sessions') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">
+                        {{ __('Devices') }}
+                    </x-nav-link>
+                    @if (Auth::user()->hasAnyRole(\App\Enums\CoreRole::internalRoles()))
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                            {{ __('Admin') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -37,6 +48,17 @@
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        <x-dropdown-link :href="route('account.sessions.index')">
+                            {{ __('Session History') }}
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('account.devices.index')">
+                            {{ __('Device History') }}
+                        </x-dropdown-link>
+                        @if (Auth::user()->hasAnyRole(\App\Enums\CoreRole::internalRoles()))
+                            <x-dropdown-link :href="route('admin.dashboard')">
+                                {{ __('Admin Area') }}
+                            </x-dropdown-link>
+                        @endif
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
@@ -80,9 +102,27 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">
+                    {{ __('Sessions') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">
+                    {{ __('Devices') }}
+                </x-responsive-nav-link>
+
+                @if (Auth::user()->hasAnyRole(\App\Enums\CoreRole::internalRoles()))
+                    <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">
+                        {{ __('Admin') }}
+                    </x-responsive-nav-link>
+                @endif
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

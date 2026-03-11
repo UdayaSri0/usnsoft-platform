@@ -4,7 +4,6 @@ namespace App\Enums;
 
 enum CoreRole: string
 {
-    case Guest = 'guest';
     case User = 'user';
     case SuperAdmin = 'super_admin';
     case Admin = 'admin';
@@ -16,7 +15,7 @@ enum CoreRole: string
 
     public function isInternal(): bool
     {
-        return ! in_array($this, [self::Guest, self::User], true);
+        return $this !== self::User;
     }
 
     /**

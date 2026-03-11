@@ -2,6 +2,21 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    @if (filled(config('services.google.client_id')))
+        <div class="mb-4">
+            <a
+                href="{{ route('auth.google.redirect') }}"
+                class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+            >
+                {{ __('Continue with Google') }}
+            </a>
+        </div>
+
+        <div class="mb-4 text-center text-xs uppercase tracking-wide text-gray-400">
+            {{ __('or continue with email') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 

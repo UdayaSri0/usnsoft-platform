@@ -25,8 +25,11 @@ class AuditLogService
         array $metadata = [],
         array $tags = [],
     ): AuditLog {
+        $occurredAt = CarbonImmutable::now();
+
         return AuditLog::query()->create([
             'actor_id' => $actor?->getAuthIdentifier(),
+            'event' => $eventType,
             'event_type' => $eventType,
             'action' => $action,
             'auditable_type' => $auditable?->getMorphClass(),
@@ -37,7 +40,8 @@ class AuditLogService
             'tags' => $tags,
             'ip_address' => request()?->ip(),
             'user_agent' => request()?->userAgent(),
-            'occurred_at' => CarbonImmutable::now(),
+            'occurred_at' => $occurredAt,
+            'created_at' => $occurredAt,
         ]);
     }
 }

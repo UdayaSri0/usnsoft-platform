@@ -13,81 +13,53 @@ class PermissionScaffoldSeeder extends Seeder
     private function permissionGroups(): array
     {
         return [
-            'identity' => [
-                'identity.users.view',
-                'identity.users.create',
-                'identity.users.update',
-                'identity.users.delete',
-                'identity.roles.view',
-                'identity.roles.assign',
-                'identity.roles.manage',
-                'identity.permissions.view',
-                'identity.permissions.manage',
+            'profile' => [
+                'profile.view',
+                'profile.update',
+                'account.requestDeletion',
             ],
-            'settings' => [
-                'settings.site.view',
-                'settings.site.update',
-                'settings.branding.update',
-            ],
-            'cms' => [
-                'cms.pages.view',
-                'cms.pages.create',
-                'cms.pages.update',
-                'cms.pages.submit',
-                'cms.pages.approve',
-                'cms.pages.publish',
-                'cms.blocks.manage',
-            ],
-            'products' => [
-                'products.view',
-                'products.create',
-                'products.update',
-                'products.submit',
-                'products.approve',
-                'products.publish',
-                'products.download.manage',
-            ],
-            'blog' => [
-                'blog.posts.view',
-                'blog.posts.create',
-                'blog.posts.update',
-                'blog.posts.submit',
-                'blog.posts.approve',
-                'blog.posts.publish',
-            ],
-            'services' => [
-                'services.catalog.view',
-                'services.catalog.manage',
-            ],
-            'faq' => [
-                'faq.view',
-                'faq.manage',
-            ],
-            'showcase' => [
-                'showcase.testimonials.manage',
-                'showcase.partners.manage',
-                'showcase.team.manage',
-                'showcase.timeline.manage',
-                'showcase.achievements.manage',
-            ],
-            'client_requests' => [
-                'client_requests.view',
-                'client_requests.manage',
-                'client_requests.assign',
-            ],
-            'careers' => [
-                'careers.positions.view',
-                'careers.positions.manage',
-                'careers.applications.manage',
-            ],
-            'audit_security' => [
-                'audit.logs.view',
+            'security' => [
+                'security.sessions.viewOwn',
+                'security.devices.viewOwn',
+                'security.logs.view',
                 'security.events.view',
-                'security.events.resolve',
             ],
-            'notifications' => [
-                'notifications.manage',
-                'notifications.send',
+            'users' => [
+                'users.viewAny',
+                'users.view',
+                'users.create',
+                'users.update',
+                'users.deactivate',
+                'users.restore',
+                'users.assignRoles',
+                'users.assignPermissions',
+            ],
+            'staff' => [
+                'staff.create',
+                'staff.viewAny',
+                'staff.update',
+                'staff.deactivate',
+            ],
+            'rbac' => [
+                'roles.view',
+                'roles.update',
+                'permissions.view',
+                'permissions.update',
+            ],
+            'admin' => [
+                'admin.access',
+                'superadmin.access',
+            ],
+            'downloads' => [
+                'downloads.protected.access',
+            ],
+            'requests' => [
+                'requests.create',
+                'requests.viewOwn',
+                'requests.viewAny',
+                'requests.updateStatus',
+                'requests.commentInternal',
+                'requests.commentPublic',
             ],
         ];
     }
@@ -100,7 +72,7 @@ class PermissionScaffoldSeeder extends Seeder
                     ['name' => $permissionName],
                     [
                         'module' => $group,
-                        'description' => 'Scaffolded permission',
+                        'description' => 'Core permission scaffold',
                         'is_core' => true,
                     ],
                 );
