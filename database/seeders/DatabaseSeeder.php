@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             PermissionScaffoldSeeder::class,
             RolePermissionSeeder::class,
             SuperAdminBootstrapSeeder::class,
+            CmsBlockDefinitionSeeder::class,
+            CmsSystemPageSeeder::class,
         ]);
 
         if (app()->environment(['local', 'staging']) && (bool) env('USNSOFT_SEED_DEMO_USERS', false)) {

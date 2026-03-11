@@ -1,71 +1,55 @@
 <x-guest-layout>
-    <p class="mb-4 text-sm text-gray-600">
-        {{ __('Public registration creates a standard user account. Internal staff accounts are provisioned by SuperAdmin only.') }}
-    </p>
+    <div>
+        <h1 class="font-display text-2xl font-semibold text-slate-900">Create your USNsoft account</h1>
+        <p class="mt-2 text-sm text-slate-600">Public signup creates a standard user account. Internal privileged accounts are provisioned by SuperAdmin only.</p>
+    </div>
 
     @if (filled(config('services.google.client_id')))
-        <div class="mb-4">
-            <a
-                href="{{ route('auth.google.redirect') }}"
-                class="inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
-            >
-                {{ __('Register with Google') }}
-            </a>
-        </div>
-
-        <div class="mb-4 text-center text-xs uppercase tracking-wide text-gray-400">
-            {{ __('or register with email') }}
+        <div class="mt-5 space-y-3">
+            <a href="{{ route('auth.google.redirect') }}" class="usn-btn-secondary w-full justify-center">Register with Google</a>
+            <p class="text-center text-xs font-semibold uppercase tracking-wide text-slate-400">or create with email</p>
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" class="mt-6 space-y-5" x-data="{ showPassword: false, showConfirm: false }">
         @csrf
 
-        <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+            <x-input-label for="name" :value="__('Full name')" />
+            <x-text-input id="name" class="mt-1 block w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+        <div>
+            <x-input-label for="email" :value="__('Email address')" />
+            <x-text-input id="email" class="mt-1 block w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
+        <div>
             <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
+            <div class="relative mt-1">
+                <x-text-input id="password" class="block w-full pe-20" x-bind:type="showPassword ? 'text' : 'password'" name="password" required autocomplete="new-password" />
+                <button type="button" class="absolute inset-y-0 right-2 my-1 rounded-lg px-3 text-xs font-semibold text-slate-500 hover:bg-slate-100" @click="showPassword = !showPassword" x-text="showPassword ? 'Hide' : 'Show'"></button>
+            </div>
+            <p class="mt-1 text-xs text-slate-500">Use at least 12 characters with mixed case, numbers, and symbols.</p>
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
+        <div>
+            <x-input-label for="password_confirmation" :value="__('Confirm password')" />
+            <div class="relative mt-1">
+                <x-text-input id="password_confirmation" class="block w-full pe-20" x-bind:type="showConfirm ? 'text' : 'password'" name="password_confirmation" required autocomplete="new-password" />
+                <button type="button" class="absolute inset-y-0 right-2 my-1 rounded-lg px-3 text-xs font-semibold text-slate-500 hover:bg-slate-100" @click="showConfirm = !showConfirm" x-text="showConfirm ? 'Hide' : 'Show'"></button>
+            </div>
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <x-primary-button class="w-full justify-center">{{ __('Register') }}</x-primary-button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-slate-600">
+        Already registered?
+        <a href="{{ route('login') }}" class="font-semibold text-sky-700 hover:text-sky-900">Log in</a>
+    </p>
 </x-guest-layout>

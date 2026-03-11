@@ -9,6 +9,8 @@ return [
         'staff.create',
         'downloads.protected.access',
         'requests.create',
+        'cms.pages.submit_review',
+        'cms.pages.publish',
     ],
 
     'admin_route_protection' => [

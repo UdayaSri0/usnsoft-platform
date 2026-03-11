@@ -26,10 +26,23 @@ use App\Modules\IdentityAccess\Policies\RolePolicy;
 use App\Modules\IdentityAccess\Policies\UserPolicy;
 use App\Modules\Media\Models\MediaAsset;
 use App\Modules\Media\Models\MediaAttachment;
+use App\Modules\Pages\Models\BlockDefinition;
+use App\Modules\Pages\Models\Page;
+use App\Modules\Pages\Models\PageVersion;
+use App\Modules\Pages\Models\PageVersionBlock;
+use App\Modules\Pages\Models\PreviewAccessToken;
+use App\Modules\Pages\Models\ReusableBlock;
+use App\Modules\Pages\Policies\BlockDefinitionPolicy;
+use App\Modules\Pages\Policies\PagePolicy;
+use App\Modules\Pages\Policies\PageVersionPolicy;
+use App\Modules\Pages\Policies\ReusableBlockPolicy;
 use App\Modules\Products\Policies\ProtectedDownloadPolicy;
+use App\Modules\Seo\Models\SeoMeta;
 use App\Modules\SiteSettings\Models\SiteSetting;
+use App\Modules\Workflow\Models\ApprovalRecord;
 use App\Modules\Workflow\Models\ApprovalRequest;
 use App\Modules\Workflow\Models\StatusHistory;
+use App\Modules\Workflow\Policies\ApprovalRecordPolicy;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -65,6 +78,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(UserDevice::class, UserDevicePolicy::class);
         Gate::policy(SecurityEvent::class, SecurityEventPolicy::class);
         Gate::policy(AuditLog::class, AuditLogPolicy::class);
+        Gate::policy(Page::class, PagePolicy::class);
+        Gate::policy(PageVersion::class, PageVersionPolicy::class);
+        Gate::policy(ReusableBlock::class, ReusableBlockPolicy::class);
+        Gate::policy(BlockDefinition::class, BlockDefinitionPolicy::class);
+        Gate::policy(ApprovalRecord::class, ApprovalRecordPolicy::class);
 
         Gate::define('admin.access', static function (User $user): bool {
             return $user->isInternalStaff() && $user->hasPermission('admin.access');
@@ -101,6 +119,14 @@ class AppServiceProvider extends ServiceProvider
             'user_device' => UserDevice::class,
             'failed_login_attempt' => FailedLoginAttempt::class,
             'account_deletion_request' => AccountDeletionRequest::class,
+            'page' => Page::class,
+            'page_version' => PageVersion::class,
+            'page_version_block' => PageVersionBlock::class,
+            'block_definition' => BlockDefinition::class,
+            'reusable_block' => ReusableBlock::class,
+            'preview_access_token' => PreviewAccessToken::class,
+            'seo_meta' => SeoMeta::class,
+            'approval_record' => ApprovalRecord::class,
         ]);
     }
 }

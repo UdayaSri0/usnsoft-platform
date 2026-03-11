@@ -1,72 +1,70 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Device & Session History') }}
-        </h2>
+        <div>
+            <h2 class="usn-heading">Session History</h2>
+            <p class="usn-subheading">Review active and historical sessions for this account.</p>
+        </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    @if (session('status') === 'other-sessions-invalidated')
-                        <div class="mb-4 rounded border border-green-300 bg-green-50 p-3 text-sm text-green-700">
-                            {{ __('Other sessions were logged out successfully.') }}
-                        </div>
-                    @elseif (session('status') === 'no-other-sessions')
-                        <div class="mb-4 rounded border border-gray-300 bg-gray-50 p-3 text-sm text-gray-700">
-                            {{ __('No other active sessions were found.') }}
-                        </div>
-                    @endif
+        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+            @if (session('status') === 'other-sessions-invalidated')
+                <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">Other sessions were logged out successfully.</div>
+            @elseif (session('status') === 'no-other-sessions')
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">No other active sessions were found.</div>
+            @endif
 
-                    <form method="POST" action="{{ route('account.sessions.destroy-others') }}" class="mb-6 space-y-2">
-                        @csrf
-                        <x-input-label for="logout_other_password" :value="__('Confirm password to logout other sessions')" />
-                        <div class="flex flex-col sm:flex-row gap-2">
-                            <x-text-input id="logout_other_password" type="password" name="password" class="block w-full sm:w-96" required />
-                            <x-primary-button>{{ __('Logout Other Sessions') }}</x-primary-button>
-                        </div>
+            <section class="usn-card">
+                <h3 class="font-display text-lg font-semibold text-slate-900">Logout Other Sessions</h3>
+                <form method="POST" action="{{ route('account.sessions.destroy-others') }}" class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
+                    @csrf
+                    <div class="w-full sm:max-w-sm">
+                        <x-input-label for="logout_other_password" :value="__('Confirm password')" />
+                        <x-text-input id="logout_other_password" type="password" name="password" class="mt-1 block w-full" required />
                         <x-input-error :messages="$errors->get('password')" class="mt-1" />
-                    </form>
-
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead>
-                                <tr class="text-left">
-                                    <th class="py-2 pe-4">{{ __('Logged In') }}</th>
-                                    <th class="py-2 pe-4">{{ __('Last Activity') }}</th>
-                                    <th class="py-2 pe-4">{{ __('IP') }}</th>
-                                    <th class="py-2 pe-4">{{ __('Current') }}</th>
-                                    <th class="py-2 pe-4">{{ __('Invalidated') }}</th>
-                                    <th class="py-2">{{ __('User Agent') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                @forelse ($history as $session)
-                                    <tr>
-                                        <td class="py-2 pe-4">{{ $session->logged_in_at }}</td>
-                                        <td class="py-2 pe-4">{{ $session->last_activity_at ?? '-' }}</td>
-                                        <td class="py-2 pe-4">{{ $session->ip_address ?? '-' }}</td>
-                                        <td class="py-2 pe-4">
-                                            {{ $session->session_identifier === $currentSessionId ? __('Yes') : __('No') }}
-                                        </td>
-                                        <td class="py-2 pe-4">{{ $session->invalidated_at ? __('Yes') : __('No') }}</td>
-                                        <td class="py-2 break-all">{{ $session->user_agent ?? '-' }}</td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="py-4 text-gray-500">{{ __('No session history available yet.') }}</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
                     </div>
+                    <x-primary-button>Logout Other Sessions</x-primary-button>
+                </form>
+            </section>
 
-                    <div class="mt-4">
-                        {{ $history->links() }}
-                    </div>
-                </div>
-            </div>
+            <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <table class="usn-table">
+                    <thead>
+                        <tr>
+                            <th>Logged In</th>
+                            <th>Last Activity</th>
+                            <th>IP</th>
+                            <th>Current</th>
+                            <th>Invalidated</th>
+                            <th>User Agent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($history as $session)
+                            <tr>
+                                <td>{{ $session->logged_in_at }}</td>
+                                <td>{{ $session->last_activity_at ?? '-' }}</td>
+                                <td>{{ $session->ip_address ?? '-' }}</td>
+                                <td>
+                                    @if ($session->session_identifier === $currentSessionId)
+                                        <span class="usn-badge-success">Current</span>
+                                    @else
+                                        <span class="usn-badge-muted">No</span>
+                                    @endif
+                                </td>
+                                <td>{{ $session->invalidated_at ? 'Yes' : 'No' }}</td>
+                                <td class="max-w-sm break-all">{{ $session->user_agent ?? '-' }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-sm text-slate-500">No session history available yet.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </section>
+
+            {{ $history->links() }}
         </div>
     </div>
 </x-app-layout>

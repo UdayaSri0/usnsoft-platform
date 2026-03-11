@@ -13,6 +13,8 @@ class StatusHistory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'statusable_type',
+        'statusable_id',
         'from_state',
         'to_state',
         'visibility',

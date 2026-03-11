@@ -1,16 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Create Internal Account') }}
-        </h2>
+        <div>
+            <h2 class="usn-heading">{{ __('Create Internal Account') }}</h2>
+            <p class="usn-subheading">Only SuperAdmin can provision privileged internal accounts.</p>
+        </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+        <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <div class="usn-card">
+                <div>
                     @if (session('status') === 'internal-account-created')
-                        <div class="mb-4 rounded border border-green-300 bg-green-50 p-3 text-green-700 text-sm">
+                        <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
                             {{ __('Internal account created successfully.') }}
                         </div>
                     @endif
@@ -32,7 +33,7 @@
 
                         <div>
                             <x-input-label for="role_id" :value="__('Role')" />
-                            <select id="role_id" name="role_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                            <select id="role_id" name="role_id" class="usn-input mt-1 block w-full" required>
                                 <option value="">{{ __('Select a role') }}</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}" @selected(old('role_id') == $role->id)>
