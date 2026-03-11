@@ -63,6 +63,19 @@ enum PermissionName: string
     case CmsApprovalsViewQueue = 'cms.approvals.view_queue';
     case CmsApprovalsAct = 'cms.approvals.act';
     case CmsPreviewAccessShared = 'cms.preview.access_shared';
+    case ProductsView = 'products.view';
+    case ProductsCreate = 'products.create';
+    case ProductsUpdate = 'products.update';
+    case ProductsPreview = 'products.preview';
+    case ProductsSubmitReview = 'products.submit_review';
+    case ProductsApprove = 'products.approve';
+    case ProductsReject = 'products.reject';
+    case ProductsPublish = 'products.publish';
+    case ProductsSchedule = 'products.schedule';
+    case ProductsArchive = 'products.archive';
+    case ProductCategoriesManage = 'products.categories.manage';
+    case ProductTagsManage = 'products.tags.manage';
+    case ProductReviewsModerate = 'products.reviews.moderate';
 
     /**
      * @return list<string>

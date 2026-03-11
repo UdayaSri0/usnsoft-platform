@@ -31,7 +31,7 @@ docker compose run --rm node sh -lc "npm install && npm run build"
 
 Open:
 
-- App: `http://localhost:8080`
+- App: `APP_URL` from `.env` (default `http://localhost:8080`)
 - Mailpit: `http://localhost:8025`
 
 ## 3) Daily Run
@@ -52,13 +52,31 @@ docker compose up -d node
 
 Vite dev server URL: `http://localhost:5173`
 
-## 4) Run Tests
+## 4) After Pulling New Changes
+
+If the repository has new migrations or seed updates, run them before opening the app:
+
+```bash
+# Apply new schema changes without resetting existing local data
+docker compose run --rm app php artisan migrate
+
+# Refresh local demo/catalog content if the pull included new seed data
+docker compose run --rm app php artisan db:seed
+```
+
+If the browser is still serving an old compiled view after a pull, clear Blade's compiled output:
+
+```bash
+docker compose exec app php artisan view:clear
+```
+
+## 5) Run Tests
 
 ```bash
 docker compose run --rm app php artisan test
 ```
 
-## 5) Useful Commands
+## 6) Useful Commands
 
 ```bash
 # Re-run migrations and seeders
@@ -74,7 +92,7 @@ docker compose down
 docker compose down -v
 ```
 
-## 6) Optional Bootstraps
+## 7) Optional Bootstraps
 
 ### SuperAdmin bootstrap
 
@@ -114,7 +132,7 @@ Demo password for seeded users:
 
 - `ChangeMe123!Secure`
 
-## 7) Database Access (PostgreSQL)
+## 8) Database Access (PostgreSQL)
 
 ```bash
 # Open a psql shell
@@ -130,7 +148,7 @@ SELECT id, email, status, is_internal FROM users LIMIT 20;
 SELECT id, event_type, severity, occurred_at FROM security_events ORDER BY id DESC LIMIT 20;
 ```
 
-## 8) Common Troubleshooting
+## 9) Common Troubleshooting
 
 If files become root-owned after running container commands:
 

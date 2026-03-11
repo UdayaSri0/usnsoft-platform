@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         if (app()->environment(['local', 'staging']) && (bool) env('USNSOFT_SEED_DEMO_USERS', false)) {
             $this->call([
                 LocalDevelopmentSeeder::class,
+                ProductCatalogSeeder::class,
             ]);
         }
     }

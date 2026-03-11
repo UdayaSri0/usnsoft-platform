@@ -3,10 +3,10 @@
 @endphp
 <div class="space-y-4">
     @if (!empty($data['title']))
-        <h2 class="font-display text-2xl font-semibold text-current">{{ $data['title'] }}</h2>
+        <x-ui.public.section-heading :title="$data['title']" eyebrow="Video" inverted />
     @endif
 
-    <div class="overflow-hidden rounded-2xl border border-slate-300 bg-black/90 shadow-lg">
+    <div class="overflow-hidden rounded-3xl border border-slate-300 bg-black/90 shadow-lg">
         @if ($url)
             <iframe
                 src="{{ $url }}"

@@ -1,16 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        <x-ui.page-header
+            title="{{ __('Dashboard') }}"
+            description="Legacy Breeze dashboard placeholder. The primary authenticated experience is the account dashboard."
+            eyebrow="Legacy"
+        />
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
+    <div class="py-8">
+        <div class="usn-container-wide">
+            <div class="usn-card">
+                <p class="text-sm text-slate-700">{{ __("You're logged in.") }}</p>
             </div>
         </div>
     </div>

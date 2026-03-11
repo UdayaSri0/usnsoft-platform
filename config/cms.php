@@ -498,7 +498,7 @@ return [
                 'intro' => ['nullable', 'string', 'max:500'],
                 'address' => ['nullable', 'string', 'max:500'],
                 'phone' => ['nullable', 'string', 'max:60'],
-                'email' => ['nullable', 'email:rfc,dns'],
+                'email' => ['nullable', 'email:rfc'],
                 'hours' => ['nullable', 'string', 'max:255'],
                 'whatsapp_url' => ['nullable', 'url', 'max:2048'],
                 'telegram_url' => ['nullable', 'url', 'max:2048'],

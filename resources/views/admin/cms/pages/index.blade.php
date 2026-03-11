@@ -1,24 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="font-display text-2xl font-semibold text-slate-900">CMS Pages</h1>
-                <p class="mt-1 text-sm text-slate-500">Draft, review, approval, and publish management.</p>
-            </div>
+        <x-ui.page-header
+            title="CMS Pages"
+            description="Draft, review, approval, and publish management for the public website."
+            eyebrow="CMS"
+        >
             @can('create', \App\Modules\Pages\Models\Page::class)
-                <a href="{{ route('admin.cms.pages.create') }}" class="inline-flex items-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow">New Page</a>
+                <x-slot name="actions">
+                    <a href="{{ route('admin.cms.pages.create') }}" class="usn-btn-primary">New Page</a>
+                </x-slot>
             @endcan
-        </div>
+        </x-ui.page-header>
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+        <div class="usn-container-wide space-y-4">
             @if (session('status'))
-                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
+                <x-ui.alert tone="success" :title="session('status')" />
             @endif
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <table class="min-w-full divide-y divide-slate-200 text-sm">
+            <div class="usn-table-shell">
+                <div class="usn-table-scroll">
+                    <table class="usn-table">
                     <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
                             <th class="px-4 py-3">Page</th>
@@ -45,7 +48,7 @@
                                 <td class="px-4 py-3 text-slate-600">{{ $page->path_current }}</td>
                                 <td class="px-4 py-3">
                                     @if ($page->currentDraftVersion)
-                                        <span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
+                                        <span class="usn-badge-warning">
                                             v{{ $page->currentDraftVersion->version_number }} · {{ $page->currentDraftVersion->workflow_state->value }}
                                         </span>
                                     @else
@@ -54,7 +57,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     @if ($page->currentPublishedVersion)
-                                        <span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">v{{ $page->currentPublishedVersion->version_number }}</span>
+                                        <span class="usn-badge-success">v{{ $page->currentPublishedVersion->version_number }}</span>
                                     @else
                                         <span class="text-xs text-slate-500">Not published</span>
                                     @endif
@@ -69,7 +72,8 @@
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
 
             {{ $pages->links() }}

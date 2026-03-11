@@ -1,34 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <h2 class="usn-heading">Session History</h2>
-            <p class="usn-subheading">Review active and historical sessions for this account.</p>
-        </div>
+        <x-ui.page-header
+            title="Session History"
+            description="Review active and historical sessions for this account."
+            eyebrow="Security"
+        />
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+        <div class="usn-container-wide space-y-4">
             @if (session('status') === 'other-sessions-invalidated')
-                <div class="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">Other sessions were logged out successfully.</div>
+                <x-ui.alert tone="success" title="Other sessions were logged out successfully." />
             @elseif (session('status') === 'no-other-sessions')
-                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">No other active sessions were found.</div>
+                <x-ui.alert tone="info" title="No other active sessions were found." />
             @endif
 
             <section class="usn-card">
-                <h3 class="font-display text-lg font-semibold text-slate-900">Logout Other Sessions</h3>
+                <h3 class="font-display text-xl font-semibold text-slate-950">Logout Other Sessions</h3>
                 <form method="POST" action="{{ route('account.sessions.destroy-others') }}" class="mt-4 flex flex-col gap-2 sm:flex-row sm:items-end">
                     @csrf
                     <div class="w-full sm:max-w-sm">
                         <x-input-label for="logout_other_password" :value="__('Confirm password')" />
-                        <x-text-input id="logout_other_password" type="password" name="password" class="mt-1 block w-full" required />
+                        <x-text-input id="logout_other_password" type="password" name="password" class="mt-2 block w-full" required />
                         <x-input-error :messages="$errors->get('password')" class="mt-1" />
                     </div>
                     <x-primary-button>Logout Other Sessions</x-primary-button>
                 </form>
             </section>
 
-            <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <table class="usn-table">
+            <section class="usn-table-shell">
+                <div class="usn-table-scroll">
+                    <table class="usn-table">
                     <thead>
                         <tr>
                             <th>Logged In</th>
@@ -57,11 +59,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-sm text-slate-500">No session history available yet.</td>
+                                <td colspan="6" class="py-10 text-center text-sm text-slate-500">No session history available yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </section>
 
             {{ $history->links() }}

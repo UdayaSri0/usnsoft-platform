@@ -36,7 +36,17 @@ use App\Modules\Pages\Policies\BlockDefinitionPolicy;
 use App\Modules\Pages\Policies\PagePolicy;
 use App\Modules\Pages\Policies\PageVersionPolicy;
 use App\Modules\Pages\Policies\ReusableBlockPolicy;
+use App\Modules\Products\Models\Product;
+use App\Modules\Products\Models\ProductDownload;
+use App\Modules\Products\Models\ProductDownloadAccess;
+use App\Modules\Products\Models\ProductPreviewAccessToken;
+use App\Modules\Products\Models\ProductReview;
+use App\Modules\Products\Models\ProductUserVerification;
+use App\Modules\Products\Models\ProductVersion;
 use App\Modules\Products\Policies\ProtectedDownloadPolicy;
+use App\Modules\Products\Policies\ProductPolicy;
+use App\Modules\Products\Policies\ProductReviewPolicy;
+use App\Modules\Products\Policies\ProductVersionPolicy;
 use App\Modules\Seo\Models\SeoMeta;
 use App\Modules\SiteSettings\Models\SiteSetting;
 use App\Modules\Workflow\Models\ApprovalRecord;
@@ -83,6 +93,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ReusableBlock::class, ReusableBlockPolicy::class);
         Gate::policy(BlockDefinition::class, BlockDefinitionPolicy::class);
         Gate::policy(ApprovalRecord::class, ApprovalRecordPolicy::class);
+        Gate::policy(Product::class, ProductPolicy::class);
+        Gate::policy(ProductVersion::class, ProductVersionPolicy::class);
+        Gate::policy(ProductReview::class, ProductReviewPolicy::class);
 
         Gate::define('admin.access', static function (User $user): bool {
             return $user->isInternalStaff() && $user->hasPermission('admin.access');
@@ -127,6 +140,13 @@ class AppServiceProvider extends ServiceProvider
             'preview_access_token' => PreviewAccessToken::class,
             'seo_meta' => SeoMeta::class,
             'approval_record' => ApprovalRecord::class,
+            'product' => Product::class,
+            'product_version' => ProductVersion::class,
+            'product_download' => ProductDownload::class,
+            'product_download_access' => ProductDownloadAccess::class,
+            'product_review' => ProductReview::class,
+            'product_user_verification' => ProductUserVerification::class,
+            'product_preview_access_token' => ProductPreviewAccessToken::class,
         ]);
     }
 }

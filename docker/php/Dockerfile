@@ -6,11 +6,12 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     libpq-dev \
+    libsqlite3-dev \
     libzip-dev \
     libicu-dev \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install pdo pdo_pgsql intl zip bcmath opcache \
+    && docker-php-ext-install pdo pdo_pgsql pdo_sqlite intl zip bcmath opcache \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apt-get clean \

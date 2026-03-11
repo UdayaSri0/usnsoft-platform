@@ -1,3 +1,3 @@
-<div class="prose prose-slate max-w-none">
+<div class="usn-prose">
     {!! $data['content_html'] ?? '' !!}
 </div>

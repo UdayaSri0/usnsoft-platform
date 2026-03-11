@@ -1,17 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="font-display text-2xl font-semibold text-slate-900">Approval Queue</h1>
-                <p class="mt-1 text-sm text-slate-500">Review pending content versions and approve, reject, or publish.</p>
-            </div>
-        </div>
+        <x-ui.page-header
+            title="Approval Queue"
+            description="Review pending content versions and approve, reject, or publish."
+            eyebrow="Workflow"
+        />
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <div class="usn-container-wide space-y-4">
+            <div class="usn-table-shell">
+                <div class="usn-table-scroll">
+                    <table class="usn-table">
                     <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                         <tr>
                             <th class="px-4 py-3">Page</th>
@@ -30,7 +30,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-slate-700">v{{ $version->version_number }}</td>
                                 <td class="px-4 py-3">
-                                    <span class="rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">{{ $version->workflow_state->value }}</span>
+                                    <span class="usn-badge-warning">{{ $version->workflow_state->value }}</span>
                                 </td>
                                 <td class="px-4 py-3 text-slate-600">{{ $version->submitted_at ?? '-' }}</td>
                                 <td class="px-4 py-3">
@@ -56,7 +56,8 @@
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
 
             {{ $versions->links() }}

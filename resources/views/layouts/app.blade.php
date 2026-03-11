@@ -13,18 +13,19 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-slate-100">
+        <div class="relative min-h-screen overflow-x-hidden">
+            <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,_rgba(14,116,144,0.08),_transparent_28%),linear-gradient(180deg,_#f8fafc,_#eef4f8_42%,_#edf2f8)]"></div>
             @include('layouts.navigation')
 
             @isset($header)
-                <header class="border-b border-slate-200 bg-white/80 backdrop-blur">
-                    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <header class="border-b border-slate-200/80 bg-white/70 backdrop-blur-xl">
+                    <div class="usn-container-wide py-6">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
-            <main>
+            <main class="pb-16">
                 {{ $slot }}
             </main>
         </div>

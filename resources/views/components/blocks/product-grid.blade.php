@@ -1,18 +1,83 @@
-<div class="space-y-6">
-    <div>
-        <h2 class="font-display text-2xl font-semibold text-slate-900">{{ $data['title'] ?? 'Products' }}</h2>
-        @if (!empty($data['intro']))
-            <p class="mt-2 text-sm text-slate-600">{{ $data['intro'] }}</p>
-        @endif
-    </div>
+@php
+    $limit = max(1, (int) ($data['item_limit'] ?? 3));
+    $canQueryProducts = \Illuminate\Support\Facades\Schema::hasTable('products')
+        && \Illuminate\Support\Facades\Schema::hasTable('product_versions');
+    $products = collect();
 
-    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        @for ($i = 0; $i < ((int) ($data['item_limit'] ?? 3)); $i++)
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <p class="text-xs font-semibold uppercase tracking-wide text-sky-700">Product</p>
-                <h3 class="mt-2 font-display text-lg font-semibold text-slate-900">Product teaser {{ $i + 1 }}</h3>
-                <p class="mt-2 text-sm text-slate-600">Product module integration can bind real records in the next stage.</p>
+    if ($canQueryProducts) {
+        $products = \App\Modules\Products\Models\Product::query()
+            ->publicCatalog()
+            ->with(['currentPublishedVersion.category', 'currentPublishedVersion.platforms'])
+            ->orderByDesc('featured_flag')
+            ->orderBy('name_current')
+            ->limit($limit)
+            ->get();
+    }
+
+    if ($products->isEmpty()) {
+        $products = collect(array_slice([
+            [
+                'family' => 'Platform',
+                'name' => 'USNsoft Commerce Core',
+                'summary' => 'A secure product foundation for multi-team websites, request workflows, and customer-facing portals.',
+                'highlights' => 'Laravel 12, approvals, protected access',
+                'url' => url('/products'),
+            ],
+            [
+                'family' => 'Security',
+                'name' => 'Operational Security Suite',
+                'summary' => 'Visibility into sessions, devices, verification, and high-risk actions across internal and external user journeys.',
+                'highlights' => 'Audit trails, alerting, policy enforcement',
+                'url' => url('/products'),
+            ],
+            [
+                'family' => 'Infrastructure',
+                'name' => 'Delivery Automation Layer',
+                'summary' => 'Queues, scheduled publishing, and environment discipline aligned with enterprise maintenance expectations.',
+                'highlights' => 'Redis, scheduler, Docker-first workflow',
+                'url' => url('/products'),
+            ],
+        ], 0, $limit));
+    }
+@endphp
+
+<div class="space-y-8">
+    <x-ui.public.section-heading
+        eyebrow="Products"
+        :title="$data['title'] ?? 'Platform products and delivery layers'"
+        :intro="$data['intro'] ?? 'Core offerings that support secure digital delivery without splitting the platform into disconnected systems.'"
+    />
+
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        @foreach ($products as $product)
+            <article class="usn-card flex h-full flex-col">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="usn-badge-info">{{ data_get($product, 'currentPublishedVersion.category.name', data_get($product, 'family', 'Product')) }}</span>
+                    @if (($data['show_platforms'] ?? true) === true)
+                        <span class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+                            @php
+                                $platforms = collect(data_get($product, 'currentPublishedVersion.platforms', []))
+                                    ->map(fn ($platform) => \Illuminate\Support\Str::headline($platform->platform->value))
+                                    ->take(2)
+                                    ->implode(' + ');
+                            @endphp
+                            {{ $platforms !== '' ? $platforms : 'Web + Internal' }}
+                        </span>
+                    @endif
+                </div>
+
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ data_get($product, 'name_current', data_get($product, 'name')) }}</h3>
+                <p class="mt-3 text-sm leading-6 text-slate-600">{{ data_get($product, 'short_description_current', data_get($product, 'summary')) }}</p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    {{ data_get($product, 'current_version_label') ?: data_get($product, 'highlights') }}
+                </p>
+
+                @if (($data['show_cta'] ?? true) === true)
+                    <div class="mt-auto pt-6">
+                        <a href="{{ data_get($product, 'slug_current') ? route('products.show', ['product' => data_get($product, 'slug_current')]) : data_get($product, 'url', url('/products')) }}" class="usn-link">View product details</a>
+                    </div>
+                @endif
             </article>
-        @endfor
+        @endforeach
     </div>
 </div>

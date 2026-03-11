@@ -12,6 +12,15 @@ use App\Modules\Pages\Controllers\Admin\PageController as AdminPageController;
 use App\Modules\Pages\Controllers\Admin\ReusableBlockController;
 use App\Modules\Pages\Controllers\Site\CmsPageController;
 use App\Modules\Pages\Controllers\Site\CmsPreviewController;
+use App\Modules\Products\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
+use App\Modules\Products\Controllers\Admin\ProductController as AdminProductController;
+use App\Modules\Products\Controllers\Admin\ProductReviewController as AdminProductReviewController;
+use App\Modules\Products\Controllers\Admin\ProductTagController as AdminProductTagController;
+use App\Modules\Products\Controllers\Site\ProductController as SiteProductController;
+use App\Modules\Products\Controllers\Site\ProductDownloadController;
+use App\Modules\Products\Controllers\Site\ProductPreviewController;
+use App\Modules\Products\Controllers\Site\ProductReviewController as SiteProductReviewController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', CmsPageController::class)->name('home');
@@ -42,14 +51,19 @@ Route::middleware(['auth', 'active', 'session.track'])->group(function (): void 
     });
 
     Route::middleware(['verified.feature'])->group(function (): void {
-        Route::get('/client-requests/new', function () {
-            return response('Client request form placeholder', 200);
+        Route::get('/client-requests/new', function (Request $request) {
+            return view('client-requests.create', [
+                'user' => $request->user(),
+            ]);
         })->middleware('permission:requests.create')->name('client-requests.create');
-
-        Route::get('/products/{product}/download', function () {
-            return response('Protected download placeholder', 200);
-        })->middleware('permission:downloads.protected.access')->name('products.download');
     });
+
+    Route::get('/products/{product:slug_current}/downloads/{download}', ProductDownloadController::class)
+        ->middleware('verified.feature')
+        ->name('products.downloads.show');
+    Route::post('/products/{product:slug_current}/reviews', [SiteProductReviewController::class, 'store'])
+        ->middleware('verified')
+        ->name('products.reviews.store');
 });
 
 Route::prefix('admin')
@@ -61,7 +75,7 @@ Route::prefix('admin')
         })->name('dashboard');
 
         Route::get('/operations', function () {
-            return response('Admin operations placeholder', 200);
+            return view('admin.operations');
         })->middleware('admin')->name('operations');
 
         Route::get('/internal-accounts/create', [InternalAccountController::class, 'create'])
@@ -136,12 +150,83 @@ Route::prefix('admin')
                 ->middleware('permission:cms.blocks.manage_definitions')
                 ->name('block-definitions.update');
         });
+
+        Route::prefix('products')->name('products.')->group(function (): void {
+            Route::get('/', [AdminProductController::class, 'index'])
+                ->middleware('permission:products.view')
+                ->name('index');
+            Route::get('/create', [AdminProductController::class, 'create'])
+                ->middleware('permission:products.create')
+                ->name('create');
+            Route::post('/', [AdminProductController::class, 'store'])
+                ->middleware('permission:products.create')
+                ->name('store');
+            Route::get('/{product:id}', [AdminProductController::class, 'edit'])
+                ->middleware('permission:products.view')
+                ->name('edit');
+            Route::put('/{product:id}', [AdminProductController::class, 'update'])
+                ->middleware('permission:products.update')
+                ->name('update');
+            Route::post('/{product:id}/submit-review', [AdminProductController::class, 'submitForReview'])
+                ->middleware('permission:products.submit_review')
+                ->name('submit-review');
+            Route::post('/versions/{version}/approve', [AdminProductController::class, 'approve'])
+                ->middleware('permission:products.approve')
+                ->name('versions.approve');
+            Route::post('/versions/{version}/reject', [AdminProductController::class, 'reject'])
+                ->middleware('permission:products.reject')
+                ->name('versions.reject');
+            Route::post('/versions/{version}/schedule', [AdminProductController::class, 'schedule'])
+                ->middleware('permission:products.schedule')
+                ->name('versions.schedule');
+            Route::post('/versions/{version}/publish', [AdminProductController::class, 'publish'])
+                ->middleware('permission:products.publish')
+                ->name('versions.publish');
+            Route::post('/versions/{version}/archive', [AdminProductController::class, 'archive'])
+                ->middleware('permission:products.archive')
+                ->name('versions.archive');
+            Route::post('/versions/{version}/preview', [AdminProductController::class, 'preview'])
+                ->middleware('permission:products.preview')
+                ->name('versions.preview');
+
+            Route::get('/categories/manage', [AdminProductCategoryController::class, 'index'])
+                ->middleware('permission:products.categories.manage')
+                ->name('categories.index');
+            Route::post('/categories/manage', [AdminProductCategoryController::class, 'store'])
+                ->middleware('permission:products.categories.manage')
+                ->name('categories.store');
+            Route::put('/categories/manage/{category}', [AdminProductCategoryController::class, 'update'])
+                ->middleware('permission:products.categories.manage')
+                ->name('categories.update');
+
+            Route::get('/tags/manage', [AdminProductTagController::class, 'index'])
+                ->middleware('permission:products.tags.manage')
+                ->name('tags.index');
+            Route::post('/tags/manage', [AdminProductTagController::class, 'store'])
+                ->middleware('permission:products.tags.manage')
+                ->name('tags.store');
+            Route::put('/tags/manage/{tag}', [AdminProductTagController::class, 'update'])
+                ->middleware('permission:products.tags.manage')
+                ->name('tags.update');
+
+            Route::get('/reviews/moderation', [AdminProductReviewController::class, 'index'])
+                ->middleware('permission:products.reviews.moderate')
+                ->name('reviews.index');
+            Route::put('/reviews/moderation/{review}', [AdminProductReviewController::class, 'moderate'])
+                ->middleware('permission:products.reviews.moderate')
+                ->name('reviews.moderate');
+        });
     });
 
 require __DIR__.'/auth.php';
 
+Route::get('/products', [SiteProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product:slug_current}', [SiteProductController::class, 'show'])->name('products.show');
+
 Route::get('/preview/pages/{version}', CmsPreviewController::class)
     ->name('cms.preview.show');
+Route::get('/preview/products/{version}', ProductPreviewController::class)
+    ->name('products.preview.show');
 
 Route::get('/{path?}', CmsPageController::class)
     ->where('path', '.*')

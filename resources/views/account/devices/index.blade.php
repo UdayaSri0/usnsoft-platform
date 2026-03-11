@@ -1,15 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <h2 class="usn-heading">Device History</h2>
-            <p class="usn-subheading">Monitor recognized devices and last-seen activity.</p>
-        </div>
+        <x-ui.page-header
+            title="Device History"
+            description="Monitor recognized devices and last-seen activity for this account."
+            eyebrow="Security"
+        />
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
-            <section class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <table class="usn-table">
+        <div class="usn-container-wide space-y-4">
+            <section class="usn-table-shell">
+                <div class="usn-table-scroll">
+                    <table class="usn-table">
                     <thead>
                         <tr>
                             <th>First Seen</th>
@@ -40,11 +42,12 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-sm text-slate-500">No devices recorded yet.</td>
+                                <td colspan="7" class="py-10 text-center text-sm text-slate-500">No devices recorded yet.</td>
                             </tr>
                         @endforelse
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </section>
 
             {{ $devices->links() }}

@@ -1,39 +1,39 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-            <div>
-                <h1 class="font-display text-2xl font-semibold text-slate-900">Edit CMS Page</h1>
-                <p class="mt-1 text-sm text-slate-500">{{ $page->title_current }} · {{ $page->path_current }}</p>
-            </div>
-            <div class="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide">
+        <x-ui.page-header
+            title="Edit CMS Page"
+            description="{{ $page->title_current }} · {{ $page->path_current }}"
+            eyebrow="CMS"
+        >
+            <x-slot name="actions">
                 @if ($publishedVersion)
-                    <span class="rounded-lg bg-emerald-100 px-3 py-2 text-emerald-700">Live v{{ $publishedVersion->version_number }}</span>
+                    <span class="usn-badge-success">Live v{{ $publishedVersion->version_number }}</span>
                 @else
-                    <span class="rounded-lg bg-slate-200 px-3 py-2 text-slate-700">Not Published</span>
+                    <span class="usn-badge-muted">Not published</span>
                 @endif
-                <span class="rounded-lg bg-amber-100 px-3 py-2 text-amber-700">Draft v{{ $draft->version_number }} · {{ $draft->workflow_state->value }}</span>
-                <span class="rounded-lg bg-indigo-100 px-3 py-2 text-indigo-700">Approval: {{ $draft->approval_state->value }}</span>
-            </div>
-        </div>
+                <span class="usn-badge-warning">Draft v{{ $draft->version_number }} · {{ $draft->workflow_state->value }}</span>
+                <span class="usn-badge-info">Approval: {{ $draft->approval_state->value }}</span>
+            </x-slot>
+        </x-ui.page-header>
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+        <div class="usn-container-wide space-y-4">
             @if (session('status'))
-                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
+                <x-ui.alert tone="success" :title="session('status')" />
             @endif
 
             @if (session('preview_url'))
-                <div class="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700">
+                <x-ui.alert tone="info" title="Preview link generated">
                     Preview link generated:
                     <a href="{{ session('preview_url') }}" target="_blank" rel="noopener" class="font-semibold underline">Open preview</a>
-                </div>
+                </x-ui.alert>
             @endif
 
             @if ($publishedVersion)
-                <div class="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                <x-ui.alert tone="warning" title="Live content remains unchanged">
                     Live content remains on published version v{{ $publishedVersion->version_number }} until this draft is approved and published.
-                </div>
+                </x-ui.alert>
             @endif
 
             @include('admin.cms.pages._form', [
@@ -44,9 +44,9 @@
                 'draft' => $draft,
             ])
 
-            <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                <h2 class="font-display text-lg font-semibold text-slate-900">Workflow Actions</h2>
-                <p class="mt-1 text-sm text-slate-500">Preview is required before publish. All privileged actions are audited.</p>
+            <section class="usn-card">
+                <h2 class="font-display text-xl font-semibold text-slate-950">Workflow Actions</h2>
+                <p class="mt-2 text-sm text-slate-500">Preview is required before publish. All privileged actions remain audited.</p>
 
                 <div class="mt-5 flex flex-wrap gap-3">
                     @can('preview', $draft)
@@ -60,7 +60,7 @@
                         @can('submitForReview', $page)
                             <form method="POST" action="{{ route('admin.cms.pages.submit-review', $page) }}" class="flex items-center gap-2">
                                 @csrf
-                                <input type="text" name="notes" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm focus:border-sky-500 focus:ring-sky-500">
+                                <input type="text" name="notes" placeholder="Review note (optional)" class="usn-input min-h-11 w-72">
                                 <x-primary-button type="submit">Submit for Review</x-primary-button>
                             </form>
                         @endcan
@@ -70,14 +70,14 @@
                         @can('approve', $page)
                             <form method="POST" action="{{ route('admin.cms.versions.approve', $draft) }}" class="flex items-center gap-2">
                                 @csrf
-                                <input type="text" name="notes" placeholder="Approval note" class="rounded-xl border-slate-300 text-sm focus:border-sky-500 focus:ring-sky-500">
+                                <input type="text" name="notes" placeholder="Approval note" class="usn-input min-h-11 w-72">
                                 <x-primary-button type="submit">Approve</x-primary-button>
                             </form>
                         @endcan
                         @can('reject', $page)
                             <form method="POST" action="{{ route('admin.cms.versions.reject', $draft) }}" class="flex items-center gap-2">
                                 @csrf
-                                <input type="text" name="notes" placeholder="Rejection note" class="rounded-xl border-slate-300 text-sm focus:border-sky-500 focus:ring-sky-500">
+                                <input type="text" name="notes" placeholder="Rejection note" class="usn-input min-h-11 w-72">
                                 <x-danger-button type="submit">Reject to Draft</x-danger-button>
                             </form>
                         @endcan
@@ -87,7 +87,7 @@
                         @can('schedule', $page)
                             <form method="POST" action="{{ route('admin.cms.versions.schedule', $draft) }}" class="flex flex-wrap items-center gap-2">
                                 @csrf
-                                <input type="datetime-local" name="schedule_publish_at" required class="rounded-xl border-slate-300 text-sm focus:border-sky-500 focus:ring-sky-500">
+                                <input type="datetime-local" name="schedule_publish_at" required class="usn-input min-h-11">
                                 <x-secondary-button type="submit">Schedule</x-secondary-button>
                             </form>
                         @endcan
@@ -95,7 +95,7 @@
                             <form method="POST" action="{{ route('admin.cms.versions.publish', $draft) }}" class="flex items-center gap-2">
                                 @csrf
                                 <label class="inline-flex items-center gap-2 text-xs text-slate-600">
-                                    <input type="checkbox" name="preview_confirmed" value="1" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                    <input type="checkbox" name="preview_confirmed" value="1" class="usn-checkbox">
                                     Confirm preview done
                                 </label>
                                 <x-primary-button type="submit">Publish Now</x-primary-button>

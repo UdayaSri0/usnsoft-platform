@@ -29,13 +29,13 @@
 
             <div class="mt-4">
                 <x-input-label for="reason" value="{{ __('Reason (optional)') }}" />
-                <textarea
+                <x-textarea-input
                     id="reason"
                     name="reason"
-                    class="mt-1 block w-full rounded-xl border-slate-300 shadow-sm focus:border-sky-500 focus:ring-sky-500"
+                    class="mt-2 block w-full"
                     rows="3"
                     placeholder="{{ __('Tell us why you want to delete your account') }}"
-                >{{ old('reason') }}</textarea>
+                >{{ old('reason') }}</x-textarea-input>
                 <x-input-error :messages="$errors->userDeletion->get('reason')" class="mt-2" />
             </div>
 
@@ -46,7 +46,7 @@
                     id="password"
                     name="password"
                     type="password"
-                    class="mt-1 block w-full sm:w-3/4"
+                    class="mt-2 block w-full sm:w-3/4"
                     placeholder="{{ __('Password') }}"
                 />
 

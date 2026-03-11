@@ -90,6 +90,21 @@ class PermissionScaffoldSeeder extends Seeder
                 'cms.approvals.act',
                 'cms.preview.access_shared',
             ],
+            'products' => [
+                'products.view',
+                'products.create',
+                'products.update',
+                'products.preview',
+                'products.submit_review',
+                'products.approve',
+                'products.reject',
+                'products.publish',
+                'products.schedule',
+                'products.archive',
+                'products.categories.manage',
+                'products.tags.manage',
+                'products.reviews.moderate',
+            ],
         ];
     }
 

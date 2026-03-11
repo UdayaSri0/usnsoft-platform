@@ -2,10 +2,12 @@
     @php($presentation = app(\App\Modules\Pages\Support\BlockPresentation::class))
 
     @if ($blocks === [])
-        <section class="py-20">
-            <div class="mx-auto max-w-4xl rounded-2xl border border-slate-300 bg-white p-8 text-center shadow-sm">
-                <h1 class="font-display text-3xl font-semibold tracking-tight text-slate-900">{{ $version->title }}</h1>
-                <p class="mt-4 text-slate-600">This page is published but currently has no visible content blocks.</p>
+        <section class="usn-section">
+            <div class="usn-container-narrow">
+                <x-ui.empty-state
+                    :title="$version->title"
+                    description="This page is published, but it currently has no visible content blocks."
+                />
             </div>
         </section>
     @endif

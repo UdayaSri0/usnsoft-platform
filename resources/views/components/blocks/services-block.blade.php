@@ -1,21 +1,42 @@
-<div class="space-y-6">
-    <div>
-        <h2 class="font-display text-2xl font-semibold text-slate-900">{{ $data['title'] ?? 'Services' }}</h2>
-        @if (!empty($data['intro']))
-            <p class="mt-2 text-sm text-slate-600">{{ $data['intro'] }}</p>
-        @endif
-    </div>
+@php
+    $services = [
+        [
+            'title' => 'Software delivery',
+            'body' => 'Laravel application design, workflow implementation, secure customer access, and long-term maintainability planning.',
+        ],
+        [
+            'title' => 'Network and infrastructure',
+            'body' => 'Operational networking support, deployment topology decisions, observability, and runtime stability improvements.',
+        ],
+        [
+            'title' => 'Security operations',
+            'body' => 'Authorization boundaries, auditability, privileged action controls, and recovery-minded operational runbooks.',
+        ],
+    ];
+@endphp
 
-    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        @for ($i = 0; $i < 3; $i++)
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h3 class="font-display text-lg font-semibold text-slate-900">Service highlight {{ $i + 1 }}</h3>
-                <p class="mt-2 text-sm text-slate-600">Service module integration will attach catalog records in the next stage.</p>
+<div class="space-y-8">
+    <x-ui.public.section-heading
+        eyebrow="Services"
+        :title="$data['title'] ?? 'Services'"
+        :intro="$data['intro'] ?? 'Cross-functional delivery that keeps customer experience, internal efficiency, and security posture aligned.'"
+    />
+
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        @foreach ($services as $service)
+            <article class="usn-card h-full">
+                <div class="usn-icon-chip">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 12h14M12 5v14" />
+                    </svg>
+                </div>
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ $service['title'] }}</h3>
+                <p class="mt-3 text-sm leading-6 text-slate-600">{{ $service['body'] }}</p>
             </article>
-        @endfor
+        @endforeach
     </div>
 
     @if (!empty($data['cta_label']) && !empty($data['cta_url']))
-        <a href="{{ $data['cta_url'] }}" class="inline-flex rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white">{{ $data['cta_label'] }}</a>
+        <a href="{{ $data['cta_url'] }}" class="usn-btn-primary">{{ $data['cta_label'] }}</a>
     @endif
 </div>

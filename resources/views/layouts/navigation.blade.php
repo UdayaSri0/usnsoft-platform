@@ -1,12 +1,15 @@
-<nav x-data="{ open: false }" class="border-b border-slate-200 bg-white/90 backdrop-blur-lg">
-    <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <div class="usn-container-wide flex min-h-[4.75rem] items-center justify-between gap-4">
         <div class="flex items-center gap-8">
-            <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white">US</span>
-                <span class="font-display text-base font-semibold text-slate-900">USNsoft</span>
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
+                <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-xs font-bold text-white">US</span>
+                <span>
+                    <span class="block font-display text-base font-semibold text-slate-900">USNsoft</span>
+                    <span class="block text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500">Authenticated Workspace</span>
+                </span>
             </a>
 
-            <div class="hidden items-center gap-5 text-sm font-medium text-slate-600 lg:flex">
+            <div class="hidden items-center gap-1 lg:flex">
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
                 <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-nav-link>
                 <x-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-nav-link>
@@ -17,17 +20,20 @@
                     @if (Auth::user()->hasPermission('cms.pages.view'))
                         <x-nav-link :href="route('admin.cms.pages.index')" :active="request()->routeIs('admin.cms.*')">CMS</x-nav-link>
                     @endif
+                    @if (Auth::user()->hasPermission('products.view'))
+                        <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-nav-link>
+                    @endif
                 @endif
             </div>
         </div>
 
         <div class="hidden items-center gap-3 lg:flex">
-            <a href="{{ url('/') }}" class="rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-400">Public Site</a>
+            <a href="{{ url('/') }}" class="usn-btn-secondary">Public Site</a>
 
             <x-dropdown align="right" width="64">
                 <x-slot name="trigger">
-                    <button class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900">
-                        <span class="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-slate-900 text-xs font-bold text-white">{{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
+                    <button type="button" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:text-slate-900">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white">{{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
                         <span>{{ Auth::user()->name }}</span>
                     </button>
                 </x-slot>
@@ -45,6 +51,9 @@
                             @if (Auth::user()->hasPermission('cms.pages.view'))
                                 <x-dropdown-link :href="route('admin.cms.pages.index')">CMS Pages</x-dropdown-link>
                             @endif
+                            @if (Auth::user()->hasPermission('products.view'))
+                                <x-dropdown-link :href="route('admin.products.index')">Products</x-dropdown-link>
+                            @endif
                             @if (Auth::user()->hasPermission('cms.approvals.view_queue'))
                                 <x-dropdown-link :href="route('admin.cms.approvals.index')">Approval Queue</x-dropdown-link>
                             @endif
@@ -61,15 +70,16 @@
             </x-dropdown>
         </div>
 
-        <button @click="open = !open" class="inline-flex items-center rounded-xl border border-slate-300 p-2 text-slate-600 lg:hidden">
+        <button type="button" @click="open = !open" class="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-300 bg-white text-slate-600 lg:hidden" aria-label="Toggle authenticated navigation" :aria-expanded="open.toString()">
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" :d="open ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" :d="open ? 'M6 18L18 6M6 6l12 12' : 'M4 7h16M4 12h16M4 17h16'" />
             </svg>
         </button>
     </div>
 
-    <div x-show="open" x-transition class="border-t border-slate-200 bg-white px-4 py-3 lg:hidden">
-        <div class="space-y-1 text-sm">
+    <div x-cloak x-show="open" x-transition class="border-t border-slate-200 bg-white/95 lg:hidden">
+        <div class="usn-container-wide space-y-3 py-4">
+            <div class="space-y-1 text-sm">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-responsive-nav-link>
@@ -79,13 +89,19 @@
                 @if (Auth::user()->hasPermission('cms.pages.view'))
                     <x-responsive-nav-link :href="route('admin.cms.pages.index')" :active="request()->routeIs('admin.cms.*')">CMS</x-responsive-nav-link>
                 @endif
+                @if (Auth::user()->hasPermission('products.view'))
+                    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-responsive-nav-link>
+                @endif
             @endif
             <x-responsive-nav-link :href="url('/')">Public Site</x-responsive-nav-link>
         </div>
 
-        <form method="POST" action="{{ route('logout') }}" class="mt-3">
+        <div class="usn-divider"></div>
+
+        <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" class="usn-btn-secondary w-full">Log Out</button>
         </form>
+        </div>
     </div>
 </nav>

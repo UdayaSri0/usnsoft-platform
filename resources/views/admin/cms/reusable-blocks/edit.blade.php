@@ -1,18 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h1 class="font-display text-2xl font-semibold text-slate-900">Edit Reusable Block</h1>
-                <p class="mt-1 text-sm text-slate-500">{{ $block->name }} · {{ $block->workflow_state->value }}</p>
-            </div>
-            <a href="{{ route('admin.cms.reusable-blocks.index') }}" class="inline-flex items-center rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">Back</a>
-        </div>
+        <x-ui.page-header
+            title="Edit Reusable Block"
+            description="{{ $block->name }} · {{ $block->workflow_state->value }}"
+            eyebrow="CMS"
+        >
+            <x-slot name="actions">
+                <a href="{{ route('admin.cms.reusable-blocks.index') }}" class="usn-btn-secondary">Back</a>
+            </x-slot>
+        </x-ui.page-header>
     </x-slot>
 
     <div class="py-8">
-        <div class="mx-auto max-w-5xl space-y-4 px-4 sm:px-6 lg:px-8">
+        <div class="usn-container space-y-4">
             @if (session('status'))
-                <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ session('status') }}</div>
+                <x-ui.alert tone="success" :title="session('status')" />
             @endif
 
             @include('admin.cms.reusable-blocks._form', [

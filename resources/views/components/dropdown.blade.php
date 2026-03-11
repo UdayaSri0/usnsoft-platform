@@ -1,4 +1,4 @@
-@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'p-2 bg-white'])
+@props(['align' => 'right', 'width' => '48', 'contentClasses' => 'p-2'])
 
 @php
 $alignmentClasses = match ($align) {
@@ -18,7 +18,7 @@ $width = match ($width) {
         {{ $trigger }}
     </div>
 
-    <div x-show="open"
+    <div x-cloak x-show="open"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95"
             x-transition:enter-end="opacity-100 scale-100"
@@ -28,7 +28,7 @@ $width = match ($width) {
             class="absolute z-50 mt-2 {{ $width }} rounded-xl shadow-lg {{ $alignmentClasses }}"
             style="display: none;"
             @click="open = false">
-        <div class="rounded-xl border border-slate-200 shadow-xl {{ $contentClasses }}">
+        <div class="usn-menu-panel {{ $contentClasses }}">
             {{ $content }}
         </div>
     </div>

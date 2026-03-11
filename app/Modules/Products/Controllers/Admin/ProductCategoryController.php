@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Modules\Products\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Modules\Products\Models\ProductCategory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+
+class ProductCategoryController extends Controller
+{
+    public function index(): View
+    {
+        return view('admin.products.categories.index', [
+            'categories' => ProductCategory::query()
+                ->withCount('versions')
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get(),
+        ]);
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'slug' => ['nullable', 'string', 'max:120', 'unique:product_categories,slug'],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        ProductCategory::query()->create([
+            'name' => $validated['name'],
+            'slug' => trim((string) ($validated['slug'] ?? '')) !== '' ? $validated['slug'] : Str::slug($validated['name']),
+            'description' => $validated['description'] ?? null,
+            'sort_order' => (int) ($validated['sort_order'] ?? 0),
+            'is_active' => (bool) ($validated['is_active'] ?? true),
+            'created_by' => $request->user()?->getKey(),
+            'updated_by' => $request->user()?->getKey(),
+        ]);
+
+        return back()->with('status', 'product-category-created');
+    }
+
+    public function update(Request $request, ProductCategory $category): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'slug' => ['required', 'string', 'max:120', 'unique:product_categories,slug,'.$category->getKey()],
+            'description' => ['nullable', 'string', 'max:1000'],
+            'sort_order' => ['nullable', 'integer', 'min:0'],
+            'is_active' => ['nullable', 'boolean'],
+        ]);
+
+        $category->forceFill([
+            'name' => $validated['name'],
+            'slug' => $validated['slug'],
+            'description' => $validated['description'] ?? null,
+            'sort_order' => (int) ($validated['sort_order'] ?? 0),
+            'is_active' => (bool) ($validated['is_active'] ?? false),
+            'updated_by' => $request->user()?->getKey(),
+        ])->save();
+
+        return back()->with('status', 'product-category-updated');
+    }
+}

@@ -1,20 +1,19 @@
 @php($files = is_array($data['files'] ?? null) ? $data['files'] : [])
-<div class="space-y-4">
-    @if (!empty($data['title']))
-        <h2 class="font-display text-2xl font-semibold text-slate-900">{{ $data['title'] }}</h2>
-    @endif
-    @if (!empty($data['body']))
-        <p class="text-sm text-slate-600">{{ $data['body'] }}</p>
-    @endif
+<div class="space-y-8">
+    <x-ui.public.section-heading :title="$data['title'] ?? 'Downloads'" :intro="$data['body'] ?? null" eyebrow="Resources" />
 
-    <div class="space-y-2">
+    <div class="space-y-3">
         @foreach ($files as $file)
-            <div class="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm">
-                <span>{{ $file['label'] ?? 'File' }}</span>
+            <div class="usn-card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="font-semibold text-slate-950">{{ $file['label'] ?? 'File' }}</p>
+                    <p class="mt-2 text-sm text-slate-600">Managed asset links stay authorization-aware and avoid unsafe direct execution or arbitrary external embedding.</p>
+                </div>
+
                 @if (($file['require_login'] ?? false) || (($file['access_mode'] ?? 'protected') === 'protected')
-                    <span class="rounded-lg bg-slate-900 px-2 py-1 text-xs font-semibold text-white">Protected</span>
+                    <span class="usn-badge-brand">Protected</span>
                 @else
-                    <span class="rounded-lg bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">Public</span>
+                    <span class="usn-badge-success">Public</span>
                 @endif
             </div>
         @endforeach

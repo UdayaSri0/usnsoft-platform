@@ -5,14 +5,18 @@
     </div>
 
     @if (session('status') === 'verification-required-for-protected-features')
-        <div class="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+        <div class="mt-4">
+            <x-ui.alert tone="warning">
             Email verification is required before accessing protected requests or downloads.
+            </x-ui.alert>
         </div>
     @endif
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+        <div class="mt-4">
+            <x-ui.alert tone="success">
             A new verification link has been sent to your email address.
+            </x-ui.alert>
         </div>
     @endif
 

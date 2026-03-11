@@ -1,24 +1,64 @@
-@php($limit = (int) ($data['item_limit'] ?? 3))
-<div class="space-y-6">
-    <div>
-        <h2 class="font-display text-2xl font-semibold text-slate-900">{{ $data['title'] ?? 'Blog' }}</h2>
-        @if (!empty($data['intro']))
-            <p class="mt-2 text-sm text-slate-600">{{ $data['intro'] }}</p>
-        @endif
-    </div>
+@php
+    $limit = max(1, (int) ($data['item_limit'] ?? 3));
+    $posts = array_slice([
+        [
+            'category' => 'Security',
+            'title' => 'Operational hardening for approval-driven publishing',
+            'excerpt' => 'A practical approach to previews, approvals, and privileged publishing without weakening staff boundaries.',
+            'author' => 'USNsoft Editorial',
+        ],
+        [
+            'category' => 'Platform',
+            'title' => 'Designing one Laravel codebase for both public and internal experiences',
+            'excerpt' => 'How we keep public polish and internal efficiency aligned through shared tokens, layouts, and safe content primitives.',
+            'author' => 'Engineering Team',
+        ],
+        [
+            'category' => 'Delivery',
+            'title' => 'Why enterprise request intake needs stronger state clarity',
+            'excerpt' => 'Fast-feeling UX depends on explicit validation, empty states, and workflow visibility from first contact onward.',
+            'author' => 'Operations Team',
+        ],
+        [
+            'category' => 'Architecture',
+            'title' => 'Queue, audit, and scheduled publishing in a modern corporate platform',
+            'excerpt' => 'The operational layers that keep notifications, content transitions, and traceability reliable over time.',
+            'author' => 'Platform Engineering',
+        ],
+    ], 0, $limit);
+@endphp
 
-    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        @for ($i = 0; $i < max(1, $limit); $i++)
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                @if (($data['show_date'] ?? true) === true)
-                    <p class="text-xs uppercase tracking-wide text-sky-700">{{ now()->subDays($i)->toFormattedDateString() }}</p>
+<div class="space-y-8">
+    <x-ui.public.section-heading
+        eyebrow="Insights"
+        :title="$data['title'] ?? 'Blog & News'"
+        :intro="$data['intro'] ?? 'Recent thinking from the USNsoft platform, security, and delivery teams.'"
+    />
+
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        @foreach ($posts as $index => $post)
+            <article class="usn-card flex h-full flex-col">
+                <div class="flex items-center justify-between gap-3">
+                    <span class="usn-badge-info">{{ $post['category'] }}</span>
+                    @if (($data['show_date'] ?? true) === true)
+                        <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">{{ now()->subDays($index * 4)->format('M d, Y') }}</p>
+                    @endif
+                </div>
+
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ $post['title'] }}</h3>
+
+                @if (($data['show_author'] ?? true) === true)
+                    <p class="mt-2 text-sm font-medium text-slate-500">{{ $post['author'] }}</p>
                 @endif
-                <h3 class="mt-2 font-display text-lg font-semibold text-slate-900">Blog teaser {{ $i + 1 }}</h3>
+
                 @if (($data['show_excerpt'] ?? true) === true)
-                    <p class="mt-2 text-sm text-slate-600">Blog module integration will bind real content in the next stage.</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-600">{{ $post['excerpt'] }}</p>
                 @endif
-                <a href="{{ url('/blog') }}" class="mt-3 inline-flex text-sm font-semibold text-sky-700">Read article</a>
+
+                <div class="mt-auto pt-6">
+                    <a href="{{ url('/blog') }}" class="usn-link">Read update</a>
+                </div>
             </article>
-        @endfor
+        @endforeach
     </div>
 </div>

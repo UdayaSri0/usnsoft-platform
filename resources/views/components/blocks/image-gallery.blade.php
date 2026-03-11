@@ -1,19 +1,17 @@
 @php($items = is_array($data['items'] ?? null) ? $data['items'] : [])
-<div class="space-y-5">
-    @if (!empty($data['title']))
-        <h2 class="font-display text-2xl font-semibold text-slate-900">{{ $data['title'] }}</h2>
-    @endif
+<div class="space-y-8">
+    <x-ui.public.section-heading :title="$data['title'] ?? 'Gallery'" eyebrow="Gallery" />
 
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @forelse ($items as $item)
-            <figure class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-                <div class="aspect-[4/3] bg-slate-100"></div>
+            <figure class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-[linear-gradient(135deg,_#dbeafe,_#f8fafc_52%,_#cffafe)]"></div>
                 @if (!empty($item['caption']))
-                    <figcaption class="px-4 py-3 text-xs text-slate-500">{{ $item['caption'] }}</figcaption>
+                    <figcaption class="px-4 py-3 text-xs font-medium uppercase tracking-[0.16em] text-slate-500">{{ $item['caption'] }}</figcaption>
                 @endif
             </figure>
         @empty
-            <p class="rounded-xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-600">No gallery items configured yet.</p>
+            <x-ui.empty-state title="No gallery items yet" description="Add media items to turn this section into a visual gallery." class="sm:col-span-2 lg:col-span-3" />
         @endforelse
     </div>
 </div>

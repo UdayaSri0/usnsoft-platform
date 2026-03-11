@@ -11,18 +11,18 @@ class BlockPresentation
     {
         $spacing = match ($layout['spacing'] ?? 'md') {
             'none' => 'py-0',
-            'sm' => 'py-6',
-            'lg' => 'py-16',
-            'xl' => 'py-20',
-            default => 'py-10',
+            'sm' => 'usn-section-sm',
+            'lg' => 'usn-section-lg',
+            'xl' => 'usn-section-xl',
+            default => 'usn-section',
         };
 
         $theme = match ($layout['theme_variant'] ?? 'light') {
-            'dark' => 'bg-slate-900 text-slate-100',
-            'brand' => 'bg-gradient-to-br from-blue-950 via-sky-950 to-slate-900 text-white',
-            'accent' => 'bg-cyan-50 text-slate-900',
-            'neutral' => 'bg-slate-50 text-slate-900',
-            default => 'bg-white text-slate-900',
+            'dark' => 'usn-surface-dark',
+            'brand' => 'usn-surface-brand',
+            'accent' => 'usn-surface-accent',
+            'neutral' => 'usn-surface-muted',
+            default => 'usn-surface-default',
         };
 
         return trim("{$theme} {$spacing}");
@@ -34,9 +34,9 @@ class BlockPresentation
     public function containerClass(array $layout): string
     {
         return match ($layout['container_width'] ?? 'contained') {
-            'full' => 'w-full',
-            'wide' => 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8',
-            default => 'max-w-5xl mx-auto px-4 sm:px-6 lg:px-8',
+            'full' => 'usn-container-fluid',
+            'wide' => 'usn-container-wide',
+            default => 'usn-container',
         };
     }
 

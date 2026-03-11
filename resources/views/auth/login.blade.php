@@ -18,7 +18,7 @@
 
         <div>
             <x-input-label for="email" :value="__('Email address')" />
-            <x-text-input id="email" class="mt-1 block w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="mt-2 block w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -30,7 +30,7 @@
                 @endif
             </div>
 
-            <div class="relative mt-1">
+            <div class="relative mt-2">
                 <x-text-input id="password" class="block w-full pe-20" x-bind:type="showPassword ? 'text' : 'password'" name="password" required autocomplete="current-password" />
                 <button type="button" class="absolute inset-y-0 right-2 my-1 rounded-lg px-3 text-xs font-semibold text-slate-500 hover:bg-slate-100" @click="showPassword = !showPassword" x-text="showPassword ? 'Hide' : 'Show'"></button>
             </div>
@@ -39,7 +39,7 @@
         </div>
 
         <label for="remember_me" class="inline-flex items-center gap-2 text-sm text-slate-600">
-            <input id="remember_me" type="checkbox" class="rounded border-slate-300 text-sky-600 shadow-sm focus:ring-sky-500" name="remember">
+            <input id="remember_me" type="checkbox" class="usn-checkbox" name="remember">
             <span>{{ __('Remember this device') }}</span>
         </label>
 

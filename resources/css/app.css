@@ -4,86 +4,339 @@
 
 @layer base {
     :root {
-        --usn-bg: #f1f5f9;
+        --usn-bg: #eef4f8;
         --usn-surface: #ffffff;
+        --usn-surface-muted: #f8fafc;
+        --usn-surface-strong: #e2e8f0;
         --usn-text: #0f172a;
-        --usn-muted: #475569;
-        --usn-accent: #0369a1;
-        --usn-accent-strong: #0c4a6e;
-        --usn-border: #cbd5e1;
+        --usn-muted: #52607a;
+        --usn-border: #d7e0ea;
+        --usn-border-strong: #b8c4d3;
+        --usn-primary: #0f5f92;
+        --usn-primary-strong: #0b3b5f;
+        --usn-accent: #0f766e;
+        --usn-success: #15803d;
+        --usn-warning: #b45309;
+        --usn-danger: #be123c;
+        --usn-info: #0369a1;
+        --usn-shadow-soft: 0 10px 30px -18px rgba(15, 23, 42, 0.25);
+        --usn-shadow-sm: 0 20px 48px -28px rgba(15, 23, 42, 0.28);
+        --usn-shadow-md: 0 28px 80px -34px rgba(2, 6, 23, 0.42);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::selection {
+        background: rgba(14, 116, 144, 0.18);
+        color: var(--usn-text);
     }
 
     body {
-        @apply bg-slate-100 text-slate-900 antialiased;
+        background: var(--usn-bg);
+        color: var(--usn-text);
+        @apply antialiased;
     }
 
     h1,
     h2,
     h3,
     h4 {
-        @apply font-display tracking-tight;
+        @apply font-display tracking-tight text-slate-950;
+    }
+
+    p {
+        @apply leading-7;
     }
 
     a {
         @apply transition-colors duration-200;
     }
+
+    button,
+    [type='button'],
+    [type='submit'] {
+        @apply transition-all duration-200;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        @apply text-slate-400;
+    }
+
+    details summary::-webkit-details-marker {
+        display: none;
+    }
+
+    :focus-visible {
+        @apply outline-none ring-2 ring-sky-500 ring-offset-2 ring-offset-slate-100;
+    }
 }
 
 @layer components {
-    .usn-card {
-        @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm;
+    .usn-container {
+        @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .usn-container-wide {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .usn-container-narrow {
+        @apply mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8;
+    }
+
+    .usn-container-fluid {
+        @apply w-full px-4 sm:px-6 lg:px-8;
+    }
+
+    .usn-section {
+        @apply relative py-14 sm:py-16 lg:py-20;
+    }
+
+    .usn-section-sm {
+        @apply relative py-8 sm:py-10;
+    }
+
+    .usn-section-lg {
+        @apply relative py-16 sm:py-20 lg:py-24;
+    }
+
+    .usn-section-xl {
+        @apply relative py-20 sm:py-24 lg:py-28;
+    }
+
+    .usn-surface-default {
+        @apply bg-transparent text-slate-900;
+    }
+
+    .usn-surface-muted {
+        @apply bg-slate-50/85 text-slate-900;
+    }
+
+    .usn-surface-accent {
+        @apply bg-cyan-50/80 text-slate-900;
+    }
+
+    .usn-surface-dark {
+        @apply bg-slate-950 text-slate-100;
+    }
+
+    .usn-surface-brand {
+        @apply overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(14,116,144,0.24),_transparent_35%),radial-gradient(circle_at_top_right,_rgba(37,99,235,0.22),_transparent_42%),linear-gradient(145deg,_#082f49,_#0f172a_58%,_#020617)] text-white;
+    }
+
+    .usn-page-header {
+        @apply flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between;
+    }
+
+    .usn-page-actions {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .usn-overline {
+        @apply inline-flex items-center gap-2 rounded-full border border-sky-200 bg-white/70 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-sky-800 backdrop-blur;
+    }
+
+    .usn-display {
+        @apply font-display text-4xl font-semibold leading-tight text-slate-950 sm:text-5xl lg:text-6xl;
+    }
+
+    .usn-title {
+        @apply font-display text-2xl font-semibold text-slate-950 sm:text-3xl;
     }
 
     .usn-heading {
-        @apply font-display text-2xl font-semibold text-slate-900;
+        @apply font-display text-2xl font-semibold text-slate-950;
+    }
+
+    .usn-heading-sm {
+        @apply font-display text-lg font-semibold text-slate-950;
     }
 
     .usn-subheading {
-        @apply mt-1 text-sm text-slate-500;
+        @apply mt-2 max-w-3xl text-sm leading-6 text-slate-600 sm:text-base;
+    }
+
+    .usn-lead {
+        @apply text-lg leading-8 text-slate-600 sm:text-xl;
+    }
+
+    .usn-copy {
+        @apply text-base leading-7 text-slate-600;
+    }
+
+    .usn-copy-sm {
+        @apply text-sm leading-6 text-slate-600;
+    }
+
+    .usn-link {
+        @apply font-semibold text-sky-800 hover:text-sky-950;
+    }
+
+    .usn-card {
+        @apply rounded-3xl border border-slate-200/80 bg-white/90 p-6 backdrop-blur;
+        box-shadow: var(--usn-shadow-sm);
+    }
+
+    .usn-card-muted {
+        @apply rounded-3xl border border-slate-200 bg-slate-50/90 p-6;
+        box-shadow: var(--usn-shadow-soft);
+    }
+
+    .usn-card-dark {
+        @apply rounded-3xl border border-white/10 bg-slate-950/80 p-6 text-slate-100;
+        box-shadow: var(--usn-shadow-md);
+    }
+
+    .usn-card-link {
+        @apply block rounded-3xl border border-slate-200/80 bg-white/90 p-6 transition duration-200 hover:-translate-y-0.5 hover:border-slate-300;
+        box-shadow: var(--usn-shadow-sm);
+    }
+
+    .usn-shell-card {
+        @apply rounded-3xl border border-slate-200/80 bg-white/90 backdrop-blur;
+        box-shadow: var(--usn-shadow-sm);
+    }
+
+    .usn-stat-card {
+        @apply rounded-2xl border border-slate-200/80 bg-white/90 p-5;
+        box-shadow: var(--usn-shadow-soft);
+    }
+
+    .usn-toolbar {
+        @apply flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white/90 p-4 sm:flex-row sm:items-center sm:justify-between;
+        box-shadow: var(--usn-shadow-soft);
     }
 
     .usn-badge {
-        @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold uppercase tracking-wide;
+        @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em];
     }
 
     .usn-badge-info {
-        @apply usn-badge bg-sky-100 text-sky-700;
+        @apply usn-badge bg-sky-100 text-sky-800;
     }
 
     .usn-badge-success {
-        @apply usn-badge bg-emerald-100 text-emerald-700;
+        @apply usn-badge bg-emerald-100 text-emerald-800;
     }
 
     .usn-badge-warning {
-        @apply usn-badge bg-amber-100 text-amber-700;
+        @apply usn-badge bg-amber-100 text-amber-800;
+    }
+
+    .usn-badge-danger {
+        @apply usn-badge bg-rose-100 text-rose-800;
     }
 
     .usn-badge-muted {
         @apply usn-badge bg-slate-200 text-slate-700;
     }
 
+    .usn-badge-brand {
+        @apply usn-badge bg-slate-950 text-white;
+    }
+
+    .usn-alert {
+        @apply rounded-2xl border px-4 py-4;
+        box-shadow: var(--usn-shadow-soft);
+    }
+
+    .usn-alert-title {
+        @apply mb-1 font-semibold;
+    }
+
+    .usn-alert-info {
+        @apply border-sky-200 bg-sky-50 text-sky-900;
+    }
+
+    .usn-alert-success {
+        @apply border-emerald-200 bg-emerald-50 text-emerald-900;
+    }
+
+    .usn-alert-warning {
+        @apply border-amber-200 bg-amber-50 text-amber-900;
+    }
+
+    .usn-alert-danger {
+        @apply border-rose-200 bg-rose-50 text-rose-900;
+    }
+
+    .usn-label {
+        @apply block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500;
+    }
+
     .usn-input {
-        @apply block w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500;
+        @apply block min-h-12 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm transition hover:border-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-100;
+    }
+
+    .usn-select {
+        @apply usn-input pe-10;
+    }
+
+    .usn-textarea {
+        @apply usn-input min-h-[7.5rem] resize-y;
+    }
+
+    .usn-checkbox {
+        @apply h-4 w-4 rounded border-slate-300 text-sky-700 shadow-sm focus:ring-sky-500;
+    }
+
+    .usn-file-input {
+        @apply block w-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:border-slate-400;
+    }
+
+    .usn-form-error {
+        @apply space-y-1 text-sm font-medium text-rose-700;
     }
 
     .usn-btn-primary {
-        @apply inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2;
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60;
+        box-shadow: var(--usn-shadow-soft);
     }
 
     .usn-btn-secondary {
-        @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2;
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:border-slate-400 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-60;
+    }
+
+    .usn-btn-ghost {
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-950 disabled:cursor-not-allowed disabled:opacity-60;
     }
 
     .usn-btn-danger {
-        @apply inline-flex items-center justify-center rounded-xl bg-rose-600 px-4 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2;
+        @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-rose-700 px-5 py-3 text-sm font-semibold text-white hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-60;
+        box-shadow: var(--usn-shadow-soft);
     }
 
     .usn-auth-shell {
-        @apply relative min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(14,116,144,0.18),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(37,99,235,0.16),_transparent_35%),linear-gradient(160deg,_#e2e8f0,_#f8fafc)] py-10;
+        @apply relative min-h-screen overflow-x-hidden py-6 sm:py-10;
+        background:
+            radial-gradient(circle at top left, rgba(14, 116, 144, 0.18), transparent 32%),
+            radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.12), transparent 34%),
+            linear-gradient(160deg, #dce7f0, #f8fafc 48%, #edf4fb);
     }
 
     .usn-auth-card {
-        @apply mx-auto w-full max-w-md rounded-3xl border border-white/70 bg-white/90 p-8 shadow-xl backdrop-blur;
+        @apply mx-auto w-full max-w-lg rounded-[2rem] border border-white/70 bg-white/90 p-6 backdrop-blur sm:p-8;
+        box-shadow: var(--usn-shadow-md);
+    }
+
+    .usn-auth-note {
+        @apply rounded-2xl border border-white/15 bg-white/10 p-4 text-sm text-slate-100/80;
+    }
+
+    .usn-table-shell {
+        @apply overflow-hidden rounded-3xl border border-slate-200/80 bg-white/90;
+        box-shadow: var(--usn-shadow-sm);
+    }
+
+    .usn-table-scroll {
+        @apply overflow-x-auto;
     }
 
     .usn-table {
@@ -91,15 +344,109 @@
     }
 
     .usn-table thead {
-        @apply bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500;
+        @apply bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.18em] text-slate-500;
     }
 
     .usn-table th,
     .usn-table td {
-        @apply px-4 py-3;
+        @apply px-4 py-3 align-top;
     }
 
     .usn-table tbody {
         @apply divide-y divide-slate-100;
+    }
+
+    .usn-table tbody tr {
+        @apply transition-colors duration-200 hover:bg-slate-50/80;
+    }
+
+    .usn-empty-state {
+        @apply rounded-3xl border border-dashed border-slate-300 bg-white/70 px-6 py-10 text-center;
+    }
+
+    .usn-empty-state-icon {
+        @apply mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-500;
+    }
+
+    .usn-skeleton {
+        @apply animate-pulse rounded-2xl bg-slate-200/80;
+    }
+
+    .usn-menu-panel {
+        @apply rounded-2xl border border-slate-200 bg-white/95 p-2 backdrop-blur;
+        box-shadow: var(--usn-shadow-md);
+    }
+
+    .usn-dropdown-link {
+        @apply block w-full rounded-xl px-3 py-2 text-start text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950 focus:bg-slate-100;
+    }
+
+    .usn-nav-link {
+        @apply inline-flex items-center rounded-xl px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950;
+    }
+
+    .usn-nav-link-active {
+        @apply bg-slate-950 text-white hover:bg-slate-950 hover:text-white;
+    }
+
+    .usn-mobile-nav-link {
+        @apply block w-full rounded-xl px-3 py-3 text-start text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950;
+    }
+
+    .usn-mobile-nav-link-active {
+        @apply bg-slate-950 text-white hover:bg-slate-950 hover:text-white;
+    }
+
+    .usn-divider {
+        @apply h-px bg-slate-200;
+    }
+
+    .usn-modal-panel {
+        @apply mb-6 overflow-hidden rounded-3xl border border-slate-200 bg-white;
+        box-shadow: var(--usn-shadow-md);
+    }
+
+    .usn-icon-chip {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-600;
+    }
+
+    .usn-prose {
+        @apply max-w-none text-slate-700;
+    }
+
+    .usn-prose h2 {
+        @apply mt-10 font-display text-2xl font-semibold text-slate-950;
+    }
+
+    .usn-prose h3 {
+        @apply mt-8 font-display text-xl font-semibold text-slate-950;
+    }
+
+    .usn-prose h4 {
+        @apply mt-6 font-display text-lg font-semibold text-slate-950;
+    }
+
+    .usn-prose p,
+    .usn-prose ul,
+    .usn-prose ol,
+    .usn-prose blockquote {
+        @apply mt-4 text-base leading-7 text-slate-700;
+    }
+
+    .usn-prose ul,
+    .usn-prose ol {
+        @apply ps-5;
+    }
+
+    .usn-prose a {
+        @apply font-semibold text-sky-800 underline decoration-sky-200 underline-offset-4 hover:text-sky-950;
+    }
+
+    .usn-prose blockquote {
+        @apply rounded-2xl border-s-4 border-sky-300 bg-sky-50 px-5 py-4 text-slate-700;
+    }
+
+    .usn-prose strong {
+        @apply font-semibold text-slate-950;
     }
 }

@@ -13,27 +13,36 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="usn-auth-shell">
-        <div class="mx-auto grid min-h-[calc(100vh-5rem)] max-w-6xl items-center gap-8 px-4 py-8 sm:px-6 lg:grid-cols-2 lg:px-8">
-            <div class="hidden rounded-3xl border border-white/50 bg-gradient-to-br from-slate-900 via-sky-900 to-cyan-800 p-8 text-white shadow-2xl lg:block">
+        <div class="usn-container-wide grid min-h-[calc(100vh-4rem)] items-center gap-8 py-8 lg:grid-cols-[1.1fr_0.9fr]">
+            <div class="hidden rounded-[2rem] border border-white/40 bg-[radial-gradient(circle_at_top_left,_rgba(103,232,249,0.22),_transparent_30%),linear-gradient(150deg,_rgba(8,47,73,0.95),_rgba(15,23,42,0.98))] p-8 text-white lg:block">
                 <a href="/" class="inline-flex items-center gap-3">
-                    <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-sm font-bold">US</span>
+                    <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white/15 text-sm font-bold">US</span>
                     <span class="font-display text-xl font-semibold">USNsoft Platform</span>
                 </a>
-                <h1 class="mt-8 font-display text-3xl font-semibold leading-tight">Secure company platform and publishing workspace</h1>
-                <p class="mt-4 max-w-md text-sm text-slate-200">
-                    Access your account to manage requests, downloads, and internal operations with auditable workflows.
+                <h1 class="mt-10 font-display text-4xl font-semibold leading-tight">Secure company platform, publishing workspace, and customer access layer.</h1>
+                <p class="mt-4 max-w-xl text-base leading-7 text-slate-200">
+                    Sign in to manage protected requests, approval-driven publishing, and internal operations without weakening privileged boundaries.
                 </p>
-                <ul class="mt-8 space-y-3 text-sm text-slate-200">
-                    <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-cyan-300"></span>Approval-driven publishing</li>
-                    <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-cyan-300"></span>Role and permission boundaries</li>
-                    <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-cyan-300"></span>Security event and audit logging</li>
-                </ul>
+                <div class="mt-10 grid gap-4 sm:grid-cols-3">
+                    <div class="usn-auth-note">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">Publishing</p>
+                        <p class="mt-2 text-sm leading-6">Preview, approval, schedule, and publish flows stay auditable.</p>
+                    </div>
+                    <div class="usn-auth-note">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">Access</p>
+                        <p class="mt-2 text-sm leading-6">Role and permission boundaries separate staff, editors, and public users.</p>
+                    </div>
+                    <div class="usn-auth-note">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">Security</p>
+                        <p class="mt-2 text-sm leading-6">Sessions, devices, verification, and notifications are designed for long-term operations.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="usn-auth-card">
-                <div class="mb-6 text-center lg:hidden">
+                <div class="mb-8 text-center lg:hidden">
                     <a href="/" class="inline-flex items-center gap-2">
-                        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-xs font-bold text-white">US</span>
+                        <span class="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-900 text-xs font-bold text-white">US</span>
                         <span class="font-display text-lg font-semibold text-slate-900">USNsoft</span>
                     </a>
                 </div>
