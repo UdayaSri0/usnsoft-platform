@@ -5,10 +5,10 @@
     <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         @forelse ($items as $item)
             <article class="usn-card h-full">
-                <p class="text-sm leading-7 text-slate-700">“{{ $item['quote'] ?? '' }}”</p>
-                <p class="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $item['author'] ?? 'Client' }}</p>
+                <p class="text-sm leading-7 text-slate-700 dark:text-slate-300">“{{ $item['quote'] ?? '' }}”</p>
+                <p class="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ $item['author'] ?? 'Client' }}</p>
                 @if (!empty($item['role']))
-                    <p class="mt-2 text-xs text-slate-500">{{ $item['role'] }}</p>
+                    <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">{{ $item['role'] }}</p>
                 @endif
             </article>
         @empty

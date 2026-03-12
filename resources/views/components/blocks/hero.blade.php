@@ -45,7 +45,7 @@
 
         <ul class="mt-8 grid gap-3 sm:grid-cols-3">
             @foreach ($trustItems as $item)
-                <li class="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm leading-6 text-white/85">{{ $item }}</li>
+                <li class="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm leading-6 text-white/80">{{ $item }}</li>
             @endforeach
         </ul>
     </div>

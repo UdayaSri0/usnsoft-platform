@@ -54,7 +54,7 @@
                 <div class="flex items-center justify-between gap-3">
                     <span class="usn-badge-info">{{ data_get($product, 'currentPublishedVersion.category.name', data_get($product, 'family', 'Product')) }}</span>
                     @if (($data['show_platforms'] ?? true) === true)
-                        <span class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">
+                        <span class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                             @php
                                 $platforms = collect(data_get($product, 'currentPublishedVersion.platforms', []))
                                     ->map(fn ($platform) => \Illuminate\Support\Str::headline($platform->platform->value))
@@ -66,9 +66,9 @@
                     @endif
                 </div>
 
-                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ data_get($product, 'name_current', data_get($product, 'name')) }}</h3>
-                <p class="mt-3 text-sm leading-6 text-slate-600">{{ data_get($product, 'short_description_current', data_get($product, 'summary')) }}</p>
-                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ data_get($product, 'name_current', data_get($product, 'name')) }}</h3>
+                <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ data_get($product, 'short_description_current', data_get($product, 'summary')) }}</p>
+                <p class="mt-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                     {{ data_get($product, 'current_version_label') ?: data_get($product, 'highlights') }}
                 </p>
 

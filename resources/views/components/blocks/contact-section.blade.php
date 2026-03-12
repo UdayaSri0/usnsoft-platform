@@ -22,8 +22,8 @@
         <dl class="grid gap-4 sm:grid-cols-2">
             @foreach ($contactItems as $item)
                 <div class="usn-stat-card">
-                    <dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $item['label'] }}</dt>
-                    <dd class="mt-3 text-sm leading-6 text-slate-800">{{ $item['value'] }}</dd>
+                    <dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ $item['label'] }}</dt>
+                    <dd class="mt-3 text-sm leading-6 text-slate-800 dark:text-slate-100">{{ $item['value'] }}</dd>
                 </div>
             @endforeach
         </dl>
@@ -42,26 +42,26 @@
 
     <div class="usn-card">
         <span class="usn-badge-brand">Secure intake</span>
-        <h3 class="mt-5 font-display text-2xl font-semibold text-slate-950">Clear next steps for new enquiries</h3>
-        <p class="mt-3 text-sm leading-6 text-slate-600">
+        <h3 class="mt-5 font-display text-2xl font-semibold text-slate-950 dark:text-slate-50">Clear next steps for new enquiries</h3>
+        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
             Public form actions remain limited to safe internal handlers. This avoids arbitrary external endpoints while keeping the experience straightforward for customers and staff.
         </p>
 
         <div class="mt-6 grid gap-4 sm:grid-cols-3">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">1</p>
-                <p class="mt-2 text-sm font-semibold text-slate-900">Submit requirements</p>
-                <p class="mt-2 text-sm leading-6 text-slate-600">Capture scope, urgency, and key constraints.</p>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">1</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">Submit requirements</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Capture scope, urgency, and key constraints.</p>
             </div>
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">2</p>
-                <p class="mt-2 text-sm font-semibold text-slate-900">Internal triage</p>
-                <p class="mt-2 text-sm leading-6 text-slate-600">Route to the correct delivery lead without losing context.</p>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">2</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">Internal triage</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Route to the correct delivery lead without losing context.</p>
             </div>
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">3</p>
-                <p class="mt-2 text-sm font-semibold text-slate-900">Structured response</p>
-                <p class="mt-2 text-sm leading-6 text-slate-600">Reply with a clear plan, timing, and follow-up path.</p>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">3</p>
+                <p class="mt-2 text-sm font-semibold text-slate-900 dark:text-slate-50">Structured response</p>
+                <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Reply with a clear plan, timing, and follow-up path.</p>
             </div>
         </div>
 
@@ -73,7 +73,7 @@
                 <a href="{{ url('/faq') }}" class="usn-btn-secondary">See common questions</a>
             </div>
         @else
-            <p class="mt-6 text-sm text-slate-600">The form panel is hidden for this section. Use the direct contact details instead.</p>
+            <p class="mt-6 text-sm text-slate-600 dark:text-slate-300">The form panel is hidden for this section. Use the direct contact details instead.</p>
         @endif
     </div>
 </div>

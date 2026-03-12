@@ -6,12 +6,12 @@
         @foreach ($items as $item)
             <article class="usn-card h-full">
                 <div class="mb-5 h-16 w-16 rounded-full bg-[linear-gradient(135deg,_#0f5f92,_#dbeafe)]"></div>
-                <h3 class="font-display text-xl font-semibold text-slate-950">{{ $item['name'] ?? 'Team Member' }}</h3>
+                <h3 class="font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ $item['name'] ?? 'Team Member' }}</h3>
                 @if (!empty($item['role']))
-                    <p class="mt-2 text-xs uppercase tracking-[0.18em] text-sky-700">{{ $item['role'] }}</p>
+                    <p class="mt-2 text-xs uppercase tracking-[0.18em] text-sky-700 dark:text-sky-300">{{ $item['role'] }}</p>
                 @endif
                 @if (!empty($item['bio']))
-                    <p class="mt-4 text-sm leading-6 text-slate-600">{{ $item['bio'] }}</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $item['bio'] }}</p>
                 @endif
                 @if (!empty($item['profile_url']))
                     <a href="{{ $item['profile_url'] }}" class="mt-5 inline-flex usn-link">View profile</a>

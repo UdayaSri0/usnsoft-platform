@@ -6,9 +6,9 @@
         @foreach ($items as $index => $item)
             <article class="usn-card h-full">
                 <div class="usn-icon-chip">{{ strtoupper(substr((string) ($item['icon'] ?? chr(65 + $index)), 0, 1)) }}</div>
-                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ $item['title'] ?? 'Feature' }}</h3>
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ $item['title'] ?? 'Feature' }}</h3>
                 @if (!empty($item['body']))
-                    <p class="mt-3 text-sm leading-6 text-slate-600">{{ $item['body'] }}</p>
+                    <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $item['body'] }}</p>
                 @endif
                 @if (!empty($item['link']))
                     <a href="{{ $item['link'] }}" class="mt-5 inline-flex usn-link">Learn more</a>

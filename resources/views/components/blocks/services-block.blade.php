@@ -30,8 +30,8 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 12h14M12 5v14" />
                     </svg>
                 </div>
-                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ $service['title'] }}</h3>
-                <p class="mt-3 text-sm leading-6 text-slate-600">{{ $service['body'] }}</p>
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ $service['title'] }}</h3>
+                <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $service['body'] }}</p>
             </article>
         @endforeach
     </div>

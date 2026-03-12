@@ -29,6 +29,13 @@ Semantic intent:
 - Warning: amber
 - Danger: rose
 
+## Theme Preference
+
+- The UI theme is controlled per browser/device instance with the `usnsoft-theme` localStorage key
+- Supported values: `light`, `dark`, `system`
+- The root layout applies the `dark` class on `<html>` before paint so the chosen theme survives reloads without a flash
+- This is a local UI preference only; it is not stored in the database and does not change the site for other users
+
 ## Typography
 
 - `font-display`: `Sora`

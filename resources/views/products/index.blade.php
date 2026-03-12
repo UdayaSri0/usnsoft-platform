@@ -51,7 +51,7 @@
                     <h2 class="usn-title mt-3">Search and filter the product catalog</h2>
                     <p class="usn-subheading">Public listing excludes private, archived, and unpublished records automatically.</p>
                 </div>
-                <p class="text-sm text-slate-500">{{ $products->total() }} result{{ $products->total() === 1 ? '' : 's' }}</p>
+                <p class="text-sm text-slate-500 dark:text-slate-300">{{ $products->total() }} result{{ $products->total() === 1 ? '' : 's' }}</p>
             </div>
 
             <form method="GET" action="{{ route('products.index') }}" class="usn-card">
@@ -92,7 +92,7 @@
                     </div>
 
                     <div class="flex flex-col justify-end gap-3">
-                        <label class="inline-flex items-center gap-2 text-sm text-slate-700">
+                        <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
                             <input type="checkbox" name="featured" value="1" @checked($filters['featured']) class="usn-checkbox">
                             Featured only
                         </label>
@@ -123,7 +123,7 @@
                         @endphp
 
                         <article class="usn-card flex h-full flex-col overflow-hidden">
-                            <div class="rounded-[1.6rem] border border-slate-200/80 bg-slate-950/5 p-4">
+                            <div class="rounded-[1.6rem] border border-slate-200/80 bg-slate-950/5 p-4 dark:border-slate-800/80 dark:bg-slate-800/50">
                                 @if ($featuredImageUrl)
                                     <img src="{{ $featuredImageUrl }}" alt="" class="h-48 w-full rounded-[1.15rem] object-cover">
                                 @else
@@ -143,14 +143,14 @@
                                     @endif
                                 </div>
                                 @if ($product->approved_review_count > 0)
-                                    <span class="text-sm font-semibold text-slate-700">{{ number_format((float) $product->average_rating, 1) }}/5</span>
+                                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ number_format((float) $product->average_rating, 1) }}/5</span>
                                 @endif
                             </div>
 
-                            <h2 class="mt-5 font-display text-2xl font-semibold text-slate-950">{{ $product->name_current }}</h2>
-                            <p class="mt-3 text-sm leading-6 text-slate-600">{{ $product->short_description_current }}</p>
+                            <h2 class="mt-5 font-display text-2xl font-semibold text-slate-950 dark:text-slate-50">{{ $product->name_current }}</h2>
+                            <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">{{ $product->short_description_current }}</p>
 
-                            <div class="mt-5 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            <div class="mt-5 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                                 <span>{{ \Illuminate\Support\Str::headline($product->product_kind->value) }}</span>
                                 @if ($product->current_version_label)
                                     <span>&middot; {{ $product->current_version_label }}</span>

@@ -11,10 +11,10 @@
         </svg>
     </div>
 
-    <h3 class="mt-4 font-display text-xl font-semibold text-slate-950">{{ $title }}</h3>
+    <h3 class="mt-4 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ $title }}</h3>
 
     @if ($description)
-        <p class="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600">{{ $description }}</p>
+        <p class="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $description }}</p>
     @endif
 
     @isset($actions)

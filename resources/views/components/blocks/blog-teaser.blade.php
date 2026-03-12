@@ -41,18 +41,18 @@
                 <div class="flex items-center justify-between gap-3">
                     <span class="usn-badge-info">{{ $post['category'] }}</span>
                     @if (($data['show_date'] ?? true) === true)
-                        <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">{{ now()->subDays($index * 4)->format('M d, Y') }}</p>
+                        <p class="text-xs font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{{ now()->subDays($index * 4)->format('M d, Y') }}</p>
                     @endif
                 </div>
 
-                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950">{{ $post['title'] }}</h3>
+                <h3 class="mt-5 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">{{ $post['title'] }}</h3>
 
                 @if (($data['show_author'] ?? true) === true)
-                    <p class="mt-2 text-sm font-medium text-slate-500">{{ $post['author'] }}</p>
+                    <p class="mt-2 text-sm font-medium text-slate-500 dark:text-slate-400">{{ $post['author'] }}</p>
                 @endif
 
                 @if (($data['show_excerpt'] ?? true) === true)
-                    <p class="mt-4 text-sm leading-6 text-slate-600">{{ $post['excerpt'] }}</p>
+                    <p class="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-300">{{ $post['excerpt'] }}</p>
                 @endif
 
                 <div class="mt-auto pt-6">

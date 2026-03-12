@@ -7,6 +7,8 @@
 
         <title>{{ config('app.name', 'USNsoft') }}</title>
 
+        <x-theme.head />
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=manrope:400,500,600,700,800|sora:500,600,700&display=swap" rel="stylesheet" />
 
@@ -14,11 +16,11 @@
     </head>
     <body class="font-sans antialiased">
         <div class="relative min-h-screen overflow-x-hidden">
-            <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,_rgba(14,116,144,0.08),_transparent_28%),linear-gradient(180deg,_#f8fafc,_#eef4f8_42%,_#edf2f8)]"></div>
+            <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_left,_rgba(14,116,144,0.08),_transparent_28%),linear-gradient(180deg,_#f8fafc,_#eef4f8_42%,_#edf2f8)] dark:bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.14),_transparent_26%),radial-gradient(circle_at_bottom_right,_rgba(15,118,110,0.12),_transparent_28%),linear-gradient(180deg,_#020617,_#06111c_42%,_#0b1725)]"></div>
             @include('layouts.navigation')
 
             @isset($header)
-                <header class="border-b border-slate-200/80 bg-white/70 backdrop-blur-xl">
+                <header class="border-b border-slate-200/80 bg-white/70 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/70">
                     <div class="usn-container-wide py-6">
                         {{ $header }}
                     </div>

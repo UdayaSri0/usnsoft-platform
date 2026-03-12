@@ -6,8 +6,8 @@
         @foreach ($files as $file)
             <div class="usn-card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <p class="font-semibold text-slate-950">{{ $file['label'] ?? 'File' }}</p>
-                    <p class="mt-2 text-sm text-slate-600">Managed asset links stay authorization-aware and avoid unsafe direct execution or arbitrary external embedding.</p>
+                    <p class="font-semibold text-slate-950 dark:text-slate-50">{{ $file['label'] ?? 'File' }}</p>
+                    <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">Managed asset links stay authorization-aware and avoid unsafe direct execution or arbitrary external embedding.</p>
                 </div>
 
                 @if (($file['require_login'] ?? false) || (($file['access_mode'] ?? 'protected') === 'protected')
