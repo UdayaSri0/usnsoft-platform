@@ -5,6 +5,9 @@
     $featuredImageUrl = $featuredImage && $featuredImage->disk === 'public'
         ? asset('storage/'.$featuredImage->path)
         : null;
+    $clientRequestUrl = auth()->check() && auth()->user()->can('requests.create')
+        ? route('client-requests.create')
+        : url('/client-request');
     $downloadVisibilityMessage = static function (\App\Modules\Products\Enums\ProductDownloadVisibility $visibility): string {
         return match ($visibility) {
             \App\Modules\Products\Enums\ProductDownloadVisibility::Authenticated => 'Login required',
@@ -451,7 +454,7 @@
                                 <h3 class="font-display text-2xl font-semibold text-slate-950 dark:text-slate-50">Need a controlled release handoff?</h3>
                                 <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Manual-request download modes stay policy-aware and redirect users into a request/contact workflow instead of pretending a file exists.</p>
                                 <div class="mt-6 flex flex-wrap gap-3">
-                                    <a href="{{ url('/client-request') }}" class="usn-btn-primary">Open client request</a>
+                                    <a href="{{ $clientRequestUrl }}" class="usn-btn-primary">Open client request</a>
                                     <a href="{{ url('/contact') }}" class="usn-btn-secondary">Contact USNsoft</a>
                                 </div>
                             </div>

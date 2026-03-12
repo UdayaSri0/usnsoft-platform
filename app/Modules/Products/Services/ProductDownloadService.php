@@ -13,8 +13,6 @@ use App\Modules\Products\Models\ProductDownloadAccess;
 use App\Modules\Products\Models\ProductUserVerification;
 use App\Services\Audit\AuditLogService;
 use Carbon\CarbonImmutable;
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -61,10 +59,12 @@ class ProductDownloadService
     {
         $access = $this->recordAttempt($user, $product, $download);
 
-        if (! $this->authorize($user, $product, $download)) {
+        $deniedReason = $this->deniedReason($user, $product, $download);
+
+        if ($deniedReason !== null) {
             $access->forceFill([
                 'access_granted' => false,
-                'denied_reason' => 'not_authorized',
+                'denied_reason' => $deniedReason,
             ])->save();
 
             $this->auditLogService->record(
@@ -75,8 +75,15 @@ class ProductDownloadService
                 metadata: [
                     'product_id' => $product->getKey(),
                     'download_access_id' => $access->getKey(),
+                    'denied_reason' => $deniedReason,
                 ],
             );
+
+            if ($deniedReason === 'verified_email_required') {
+                return redirect()
+                    ->route('verification.notice')
+                    ->with('status', 'verification-required-for-protected-features');
+            }
 
             abort(403);
         }
@@ -174,6 +181,34 @@ class ProductDownloadService
             ->where('product_id', $product->getKey())
             ->where('user_id', $user->getKey())
             ->exists();
+    }
+
+    private function deniedReason(User $user, Product $product, ProductDownload $download): ?string
+    {
+        if (! $user->isActiveForAuthentication() || ! $user->hasPermission('downloads.protected.access')) {
+            return 'not_authorized';
+        }
+
+        if ($download->product_id !== $product->getKey()) {
+            return 'download_product_mismatch';
+        }
+
+        $version = $product->currentPublishedVersion;
+
+        if (! $version || $download->product_version_id !== $version->getKey()) {
+            return 'download_version_mismatch';
+        }
+
+        if ($product->visibility === ProductVisibility::Private && ! $user->isInternalStaff() && ! $this->hasVerification($user, $product)) {
+            return 'private_product_restricted';
+        }
+
+        return match ($download->visibility) {
+            ProductDownloadVisibility::Authenticated => null,
+            ProductDownloadVisibility::Verified => $user->hasVerifiedEmail() ? null : 'verified_email_required',
+            ProductDownloadVisibility::Internal => $user->isInternalStaff() ? null : 'internal_only',
+            ProductDownloadVisibility::Entitled => $this->hasVerification($user, $product) ? null : 'entitlement_required',
+        };
     }
 
     private function streamDownload(ProductDownload $download): StreamedResponse

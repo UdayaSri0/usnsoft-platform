@@ -59,7 +59,6 @@ Route::middleware(['auth', 'active', 'session.track'])->group(function (): void 
     });
 
     Route::get('/products/{product:slug_current}/downloads/{download}', ProductDownloadController::class)
-        ->middleware('verified.feature')
         ->name('products.downloads.show');
     Route::post('/products/{product:slug_current}/reviews', [SiteProductReviewController::class, 'store'])
         ->middleware('verified')

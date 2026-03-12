@@ -14,16 +14,31 @@ class VerifiedFeatureAccessTest extends TestCase
     use InteractsWithProductPlatform;
     use RefreshDatabase;
 
-    public function test_verified_email_is_required_for_client_request_and_download_routes(): void
+    public function test_verified_email_is_required_for_client_request_and_verified_download_routes_but_not_authenticated_downloads(): void
     {
         $this->seedProductPlatformCore();
 
         $userRole = Role::query()->where('name', CoreRole::User->value)->firstOrFail();
         $superAdmin = $this->makeUserWithRole(CoreRole::SuperAdmin);
-        $product = $this->createPublishedProduct($superAdmin, [
+        $verifiedDownloadProduct = $this->createPublishedProduct($superAdmin, [
             'slug' => 'verified-feature-download-product',
         ]);
-        $download = $product->currentPublishedVersion->downloads->firstOrFail();
+        $verifiedDownload = $verifiedDownloadProduct->currentPublishedVersion->downloads->firstOrFail();
+        $authenticatedDownloadProduct = $this->createPublishedProduct($superAdmin, [
+            'slug' => 'authenticated-download-product',
+            'download_visibility' => \App\Modules\Products\Enums\ProductDownloadVisibility::Authenticated->value,
+            'downloads' => [[
+                'label' => 'Authenticated release',
+                'description' => 'Authenticated users can access this without email verification.',
+                'version_label' => 'v1.0.0',
+                'download_mode' => \App\Modules\Products\Enums\ProductDownloadMode::ProtectedPrivateDownload->value,
+                'visibility' => \App\Modules\Products\Enums\ProductDownloadVisibility::Authenticated->value,
+                'media_asset_id' => $this->createMediaAsset($superAdmin, 'local', 'products/releases/authenticated-download-test.zip', 'authenticated-download-test.zip')->getKey(),
+                'is_primary' => true,
+                'review_eligible' => true,
+            ]],
+        ]);
+        $authenticatedDownload = $authenticatedDownloadProduct->currentPublishedVersion->downloads->firstOrFail();
 
         $unverifiedUser = User::factory()->unverified()->create();
         $unverifiedUser->assignRole($userRole);
@@ -34,9 +49,14 @@ class VerifiedFeatureAccessTest extends TestCase
             ->assertSessionHas('status', 'verification-required-for-protected-features');
 
         $this->actingAs($unverifiedUser)
-            ->get(route('products.downloads.show', ['product' => $product->slug_current, 'download' => $download->getKey()]))
+            ->get(route('products.downloads.show', ['product' => $verifiedDownloadProduct->slug_current, 'download' => $verifiedDownload->getKey()]))
             ->assertRedirect(route('verification.notice'))
             ->assertSessionHas('status', 'verification-required-for-protected-features');
+
+        $this->actingAs($unverifiedUser)
+            ->get(route('products.downloads.show', ['product' => $authenticatedDownloadProduct->slug_current, 'download' => $authenticatedDownload->getKey()]))
+            ->assertOk()
+            ->assertDownload('authenticated-download-test.zip');
 
         $verifiedUser = User::factory()->create();
         $verifiedUser->assignRole($userRole);
@@ -46,7 +66,7 @@ class VerifiedFeatureAccessTest extends TestCase
             ->assertOk();
 
         $this->actingAs($verifiedUser)
-            ->get(route('products.downloads.show', ['product' => $product->slug_current, 'download' => $download->getKey()]))
+            ->get(route('products.downloads.show', ['product' => $verifiedDownloadProduct->slug_current, 'download' => $verifiedDownload->getKey()]))
             ->assertOk();
     }
 }

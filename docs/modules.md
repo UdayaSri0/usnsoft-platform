@@ -10,11 +10,11 @@ All modules live in `app/Modules`.
 - `Workflow`: approval and publish-state history baseline
 - `AuditSecurity`: structured audit + security event models
 - `Notifications`: queued business-event notification baseline
+- `Pages`: CMS pages, structured blocks, preview tokens, and scheduled publishing
+- `Products`: product catalog, protected downloads, review verification, SEO, and custom Blade/Tailwind admin workflows
 
 ## Reserved Modules (scaffolded for next stages)
 
-- `Pages`: CMS pages + safe block-based composition
-- `Products`: products, versions, protected downloads, review gating
 - `Blog`: news/blog posts and editorial workflows
 - `Services`: service catalog and solution offerings
 - `Faq`: FAQs and grouped entries

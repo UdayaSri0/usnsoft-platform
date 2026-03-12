@@ -86,4 +86,41 @@ class ProductAdminWorkflowTest extends TestCase
         $this->assertSame(ContentWorkflowState::Published, $draft->workflow_state);
         $this->assertSame($draft->getKey(), $product->current_published_version_id);
     }
+
+    public function test_category_and_tag_management_actions_are_audited(): void
+    {
+        $this->seedProductPlatformCore();
+
+        $productManager = $this->makeUserWithRole(CoreRole::ProductManager);
+
+        $this->actingAs($productManager)
+            ->post(route('admin.products.categories.store'), [
+                'name' => 'Utilities',
+                'slug' => 'utilities',
+                'description' => 'Utility products.',
+                'sort_order' => 10,
+                'is_active' => 1,
+            ])
+            ->assertRedirect();
+
+        $this->actingAs($productManager)
+            ->post(route('admin.products.tags.store'), [
+                'name' => 'Security',
+                'slug' => 'security',
+                'description' => 'Security related products.',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'products.category.created',
+            'action' => 'create_product_category',
+            'actor_id' => $productManager->getKey(),
+        ]);
+
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'products.tag.created',
+            'action' => 'create_product_tag',
+            'actor_id' => $productManager->getKey(),
+        ]);
+    }
 }

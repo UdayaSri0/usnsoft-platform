@@ -6,6 +6,9 @@
         'robots_index' => false,
         'robots_follow' => false,
     ];
+    $clientRequestUrl = auth()->check() && auth()->user()->can('requests.create')
+        ? route('client-requests.create')
+        : url('/client-request');
 @endphp
 
 <x-layouts.public :seo="$seo">
@@ -32,7 +35,7 @@
                 </div>
 
                 <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ url('/client-request') }}" class="usn-btn-primary">Open client request</a>
+                    <a href="{{ $clientRequestUrl }}" class="usn-btn-primary">Open client request</a>
                     <a href="{{ route('products.show', ['product' => $product->slug_current]) }}" class="usn-btn-secondary">Back to product</a>
                 </div>
             </div>

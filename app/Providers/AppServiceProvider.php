@@ -36,11 +36,13 @@ use App\Modules\Pages\Policies\BlockDefinitionPolicy;
 use App\Modules\Pages\Policies\PagePolicy;
 use App\Modules\Pages\Policies\PageVersionPolicy;
 use App\Modules\Pages\Policies\ReusableBlockPolicy;
+use App\Modules\Products\Models\ProductCategory;
 use App\Modules\Products\Models\Product;
 use App\Modules\Products\Models\ProductDownload;
 use App\Modules\Products\Models\ProductDownloadAccess;
 use App\Modules\Products\Models\ProductPreviewAccessToken;
 use App\Modules\Products\Models\ProductReview;
+use App\Modules\Products\Models\ProductTag;
 use App\Modules\Products\Models\ProductUserVerification;
 use App\Modules\Products\Models\ProductVersion;
 use App\Modules\Products\Policies\ProtectedDownloadPolicy;
@@ -140,11 +142,13 @@ class AppServiceProvider extends ServiceProvider
             'preview_access_token' => PreviewAccessToken::class,
             'seo_meta' => SeoMeta::class,
             'approval_record' => ApprovalRecord::class,
+            'product_category' => ProductCategory::class,
             'product' => Product::class,
             'product_version' => ProductVersion::class,
             'product_download' => ProductDownload::class,
             'product_download_access' => ProductDownloadAccess::class,
             'product_review' => ProductReview::class,
+            'product_tag' => ProductTag::class,
             'product_user_verification' => ProductUserVerification::class,
             'product_preview_access_token' => ProductPreviewAccessToken::class,
         ]);
