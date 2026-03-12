@@ -36,6 +36,28 @@ use App\Modules\Pages\Policies\BlockDefinitionPolicy;
 use App\Modules\Pages\Policies\PagePolicy;
 use App\Modules\Pages\Policies\PageVersionPolicy;
 use App\Modules\Pages\Policies\ReusableBlockPolicy;
+use App\Modules\Blog\Models\BlogCategory;
+use App\Modules\Blog\Models\BlogPost;
+use App\Modules\Blog\Models\BlogTag;
+use App\Modules\Blog\Policies\BlogPostPolicy;
+use App\Modules\Faq\Models\Faq;
+use App\Modules\Faq\Models\FaqCategory;
+use App\Modules\Faq\Policies\FaqPolicy;
+use App\Modules\Careers\Models\Job;
+use App\Modules\Careers\Models\JobApplication;
+use App\Modules\Careers\Models\JobApplicationFile;
+use App\Modules\Careers\Models\JobApplicationNote;
+use App\Modules\Careers\Policies\JobApplicationFilePolicy;
+use App\Modules\Careers\Policies\JobApplicationPolicy;
+use App\Modules\Careers\Policies\JobPolicy;
+use App\Modules\ClientRequests\Models\ProjectRequest;
+use App\Modules\ClientRequests\Models\ProjectRequestAttachment;
+use App\Modules\ClientRequests\Models\ProjectRequestComment;
+use App\Modules\ClientRequests\Models\ProjectRequestEvent;
+use App\Modules\ClientRequests\Models\ProjectRequestStatus;
+use App\Modules\ClientRequests\Policies\ProjectRequestAttachmentPolicy;
+use App\Modules\ClientRequests\Policies\ProjectRequestCommentPolicy;
+use App\Modules\ClientRequests\Policies\ProjectRequestPolicy;
 use App\Modules\Products\Models\ProductCategory;
 use App\Modules\Products\Models\Product;
 use App\Modules\Products\Models\ProductDownload;
@@ -50,6 +72,16 @@ use App\Modules\Products\Policies\ProductPolicy;
 use App\Modules\Products\Policies\ProductReviewPolicy;
 use App\Modules\Products\Policies\ProductVersionPolicy;
 use App\Modules\Seo\Models\SeoMeta;
+use App\Modules\Showcase\Models\Achievement;
+use App\Modules\Showcase\Models\Partner;
+use App\Modules\Showcase\Models\TeamMember;
+use App\Modules\Showcase\Models\Testimonial;
+use App\Modules\Showcase\Models\TimelineEntry;
+use App\Modules\Showcase\Policies\AchievementPolicy;
+use App\Modules\Showcase\Policies\PartnerPolicy;
+use App\Modules\Showcase\Policies\TeamMemberPolicy;
+use App\Modules\Showcase\Policies\TestimonialPolicy;
+use App\Modules\Showcase\Policies\TimelineEntryPolicy;
 use App\Modules\SiteSettings\Models\SiteSetting;
 use App\Modules\Workflow\Models\ApprovalRecord;
 use App\Modules\Workflow\Models\ApprovalRequest;
@@ -95,9 +127,22 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ReusableBlock::class, ReusableBlockPolicy::class);
         Gate::policy(BlockDefinition::class, BlockDefinitionPolicy::class);
         Gate::policy(ApprovalRecord::class, ApprovalRecordPolicy::class);
+        Gate::policy(ProjectRequest::class, ProjectRequestPolicy::class);
+        Gate::policy(ProjectRequestAttachment::class, ProjectRequestAttachmentPolicy::class);
+        Gate::policy(ProjectRequestComment::class, ProjectRequestCommentPolicy::class);
         Gate::policy(Product::class, ProductPolicy::class);
         Gate::policy(ProductVersion::class, ProductVersionPolicy::class);
         Gate::policy(ProductReview::class, ProductReviewPolicy::class);
+        Gate::policy(BlogPost::class, BlogPostPolicy::class);
+        Gate::policy(Faq::class, FaqPolicy::class);
+        Gate::policy(Job::class, JobPolicy::class);
+        Gate::policy(JobApplication::class, JobApplicationPolicy::class);
+        Gate::policy(JobApplicationFile::class, JobApplicationFilePolicy::class);
+        Gate::policy(Testimonial::class, TestimonialPolicy::class);
+        Gate::policy(Partner::class, PartnerPolicy::class);
+        Gate::policy(TeamMember::class, TeamMemberPolicy::class);
+        Gate::policy(TimelineEntry::class, TimelineEntryPolicy::class);
+        Gate::policy(Achievement::class, AchievementPolicy::class);
 
         Gate::define('admin.access', static function (User $user): bool {
             return $user->isInternalStaff() && $user->hasPermission('admin.access');
@@ -142,6 +187,11 @@ class AppServiceProvider extends ServiceProvider
             'preview_access_token' => PreviewAccessToken::class,
             'seo_meta' => SeoMeta::class,
             'approval_record' => ApprovalRecord::class,
+            'project_request' => ProjectRequest::class,
+            'project_request_status' => ProjectRequestStatus::class,
+            'project_request_comment' => ProjectRequestComment::class,
+            'project_request_attachment' => ProjectRequestAttachment::class,
+            'project_request_event' => ProjectRequestEvent::class,
             'product_category' => ProductCategory::class,
             'product' => Product::class,
             'product_version' => ProductVersion::class,
@@ -151,6 +201,20 @@ class AppServiceProvider extends ServiceProvider
             'product_tag' => ProductTag::class,
             'product_user_verification' => ProductUserVerification::class,
             'product_preview_access_token' => ProductPreviewAccessToken::class,
+            'blog_category' => BlogCategory::class,
+            'blog_tag' => BlogTag::class,
+            'blog_post' => BlogPost::class,
+            'faq_category' => FaqCategory::class,
+            'faq' => Faq::class,
+            'job' => Job::class,
+            'job_application' => JobApplication::class,
+            'job_application_file' => JobApplicationFile::class,
+            'job_application_note' => JobApplicationNote::class,
+            'testimonial' => Testimonial::class,
+            'partner' => Partner::class,
+            'team_member' => TeamMember::class,
+            'timeline_entry' => TimelineEntry::class,
+            'achievement' => Achievement::class,
         ]);
     }
 }

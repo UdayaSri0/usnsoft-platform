@@ -19,6 +19,7 @@
         ['label' => 'Services', 'url' => url('/services'), 'active' => request()->is('services*')],
         ['label' => 'Products', 'url' => url('/products'), 'active' => request()->is('products*')],
         ['label' => 'Blog', 'url' => url('/blog'), 'active' => request()->is('blog*') || request()->is('news*')],
+        ['label' => 'FAQ', 'url' => url('/faq'), 'active' => request()->is('faq*')],
         ['label' => 'Careers', 'url' => url('/careers'), 'active' => request()->is('careers*')],
         ['label' => 'Contact', 'url' => url('/contact'), 'active' => request()->is('contact*')],
     ];

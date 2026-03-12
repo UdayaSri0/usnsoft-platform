@@ -14,6 +14,9 @@
                 <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-nav-link>
                 <x-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-nav-link>
                 <x-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">Devices</x-nav-link>
+                @if (Auth::user()->hasPermission('requests.viewOwn'))
+                    <x-nav-link :href="route('client-requests.index')" :active="request()->routeIs('client-requests.*')">Requests</x-nav-link>
+                @endif
 
                 @if (Auth::user()->isInternalStaff())
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Admin</x-nav-link>
@@ -22,6 +25,21 @@
                     @endif
                     @if (Auth::user()->hasPermission('products.view'))
                         <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('blog.view'))
+                        <x-nav-link :href="route('admin.blog.index')" :active="request()->routeIs('admin.blog.*')">Blog</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('faq.view'))
+                        <x-nav-link :href="route('admin.faq.index')" :active="request()->routeIs('admin.faq.*')">FAQ</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('careers.view'))
+                        <x-nav-link :href="route('admin.careers.index')" :active="request()->routeIs('admin.careers.*')">Careers</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('showcase.testimonials.manage') || Auth::user()->hasPermission('showcase.partners.manage') || Auth::user()->hasPermission('showcase.team.manage') || Auth::user()->hasPermission('showcase.timeline.manage') || Auth::user()->hasPermission('showcase.achievements.manage'))
+                        <x-nav-link :href="route('admin.showcase.testimonials.index')" :active="request()->routeIs('admin.showcase.*')">Showcase</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('requests.viewAny'))
+                        <x-nav-link :href="route('admin.client-requests.index')" :active="request()->routeIs('admin.client-requests.*')">Client Requests</x-nav-link>
                     @endif
                 @endif
             </div>
@@ -48,6 +66,9 @@
                         <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
                         <x-dropdown-link :href="route('account.sessions.index')">Session History</x-dropdown-link>
                         <x-dropdown-link :href="route('account.devices.index')">Device History</x-dropdown-link>
+                        @if (Auth::user()->hasPermission('requests.viewOwn'))
+                            <x-dropdown-link :href="route('client-requests.index')">My Requests</x-dropdown-link>
+                        @endif
 
                         @if (Auth::user()->isInternalStaff())
                             <div class="mt-2 border-t border-slate-200 pt-2 dark:border-slate-800">
@@ -58,6 +79,21 @@
                                 @endif
                                 @if (Auth::user()->hasPermission('products.view'))
                                     <x-dropdown-link :href="route('admin.products.index')">Products</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('blog.view'))
+                                    <x-dropdown-link :href="route('admin.blog.index')">Blog</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('faq.view'))
+                                    <x-dropdown-link :href="route('admin.faq.index')">FAQ</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('careers.view'))
+                                    <x-dropdown-link :href="route('admin.careers.index')">Careers</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('showcase.testimonials.manage') || Auth::user()->hasPermission('showcase.partners.manage') || Auth::user()->hasPermission('showcase.team.manage') || Auth::user()->hasPermission('showcase.timeline.manage') || Auth::user()->hasPermission('showcase.achievements.manage'))
+                                    <x-dropdown-link :href="route('admin.showcase.testimonials.index')">Showcase</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('requests.viewAny'))
+                                    <x-dropdown-link :href="route('admin.client-requests.index')">Client Requests</x-dropdown-link>
                                 @endif
                                 @if (Auth::user()->hasPermission('cms.approvals.view_queue'))
                                     <x-dropdown-link :href="route('admin.cms.approvals.index')">Approval Queue</x-dropdown-link>
@@ -90,6 +126,9 @@
                 <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">Devices</x-responsive-nav-link>
+                @if (Auth::user()->hasPermission('requests.viewOwn'))
+                    <x-responsive-nav-link :href="route('client-requests.index')" :active="request()->routeIs('client-requests.*')">Requests</x-responsive-nav-link>
+                @endif
                 @if (Auth::user()->isInternalStaff())
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Admin</x-responsive-nav-link>
                     @if (Auth::user()->hasPermission('cms.pages.view'))
@@ -97,6 +136,21 @@
                     @endif
                     @if (Auth::user()->hasPermission('products.view'))
                         <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('blog.view'))
+                        <x-responsive-nav-link :href="route('admin.blog.index')" :active="request()->routeIs('admin.blog.*')">Blog</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('faq.view'))
+                        <x-responsive-nav-link :href="route('admin.faq.index')" :active="request()->routeIs('admin.faq.*')">FAQ</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('careers.view'))
+                        <x-responsive-nav-link :href="route('admin.careers.index')" :active="request()->routeIs('admin.careers.*')">Careers</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('showcase.testimonials.manage') || Auth::user()->hasPermission('showcase.partners.manage') || Auth::user()->hasPermission('showcase.team.manage') || Auth::user()->hasPermission('showcase.timeline.manage') || Auth::user()->hasPermission('showcase.achievements.manage'))
+                        <x-responsive-nav-link :href="route('admin.showcase.testimonials.index')" :active="request()->routeIs('admin.showcase.*')">Showcase</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('requests.viewAny'))
+                        <x-responsive-nav-link :href="route('admin.client-requests.index')" :active="request()->routeIs('admin.client-requests.*')">Client Requests</x-responsive-nav-link>
                     @endif
                 @endif
                 <x-responsive-nav-link :href="url('/')">Public Site</x-responsive-nav-link>

@@ -10,11 +10,59 @@
     <div class="py-8">
         <div class="usn-container-wide space-y-6">
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                @if (auth()->user()->hasPermission('requests.viewAny'))
+                    <a href="{{ route('admin.client-requests.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Client Requests</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Intake Queue</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Review incoming project requests, update statuses, and separate internal from requester-visible communication.</p>
+                    </a>
+                @endif
+
                 @if (auth()->user()->hasPermission('products.view'))
                     <a href="{{ route('admin.products.index') }}" class="usn-card-link">
                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Products</p>
                         <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Catalog</h3>
                         <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Manage product drafts, release details, protected downloads, and review moderation.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('blog.view'))
+                    <a href="{{ route('admin.blog.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Editorial</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Blog & News</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Draft, review, schedule, and publish newsroom content through the approval chain.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('faq.view'))
+                    <a href="{{ route('admin.faq.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Support Content</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">FAQ</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Maintain approved answers for public support content and reusable FAQ blocks.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('careers.view'))
+                    <a href="{{ route('admin.careers.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Hiring</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Careers</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Manage approved roles, publishing windows, and careers landing content.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('careers.applications.view'))
+                    <a href="{{ route('admin.careers.applications.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Applicants</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Protected Queue</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Review protected applicant records, files, notes, and hiring status changes.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('showcase.testimonials.manage') || auth()->user()->hasPermission('showcase.partners.manage') || auth()->user()->hasPermission('showcase.team.manage') || auth()->user()->hasPermission('showcase.timeline.manage') || auth()->user()->hasPermission('showcase.achievements.manage'))
+                    <a href="{{ route('admin.showcase.testimonials.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Brand Content</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Showcase</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Testimonials, partners, team, timeline, and achievements for About and trust sections.</p>
                     </a>
                 @endif
 

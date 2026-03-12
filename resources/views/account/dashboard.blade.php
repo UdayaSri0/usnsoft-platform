@@ -34,6 +34,9 @@
                         <a class="usn-btn-secondary" href="{{ route('profile.edit') }}">Manage Profile</a>
                         <a class="usn-btn-secondary" href="{{ route('account.sessions.index') }}">Session History</a>
                         <a class="usn-btn-secondary" href="{{ route('account.devices.index') }}">Device History</a>
+                        @if ($user->hasPermission('requests.viewOwn'))
+                            <a class="usn-btn-secondary" href="{{ route('client-requests.index') }}">My Requests</a>
+                        @endif
                     </div>
                 </section>
 
@@ -46,6 +49,44 @@
                     @endif
                 </section>
             </div>
+
+            @if ($user->hasPermission('requests.viewOwn'))
+                <section class="usn-card">
+                    <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div>
+                            <h3 class="font-display text-xl font-semibold text-slate-950">Client request tracking</h3>
+                            <p class="mt-2 text-sm text-slate-600">Protected intake requests, visible workflow updates, and authorized attachments all stay in your account area.</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3">
+                            <span class="usn-badge-info">{{ $projectRequestCount }} request{{ $projectRequestCount === 1 ? '' : 's' }}</span>
+                            @can('create', \App\Modules\ClientRequests\Models\ProjectRequest::class)
+                                <a href="{{ route('client-requests.create') }}" class="usn-btn-primary">New Request</a>
+                            @endcan
+                            <a href="{{ route('client-requests.index') }}" class="usn-btn-secondary">View All</a>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 space-y-3">
+                        @forelse ($recentProjectRequests as $projectRequest)
+                            <a href="{{ route('client-requests.show', ['projectRequest' => $projectRequest]) }}" class="block rounded-2xl border border-slate-200 bg-slate-50 p-4 transition hover:border-slate-300">
+                                <div class="flex flex-wrap items-center justify-between gap-3">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">{{ $projectRequest->project_title }}</p>
+                                        <p class="mt-1 text-sm text-slate-600">{{ $projectRequest->project_summary }}</p>
+                                    </div>
+                                    <div class="flex flex-wrap items-center gap-3">
+                                        <x-client-request-status-badge :status="$projectRequest->currentStatus" />
+                                        <span class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $projectRequest->submitted_at?->format('M j, Y') }}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        @empty
+                            <x-ui.empty-state title="No requests submitted yet" description="When you submit a protected project request, the current status and visible updates will appear here." />
+                        @endforelse
+                    </div>
+                </section>
+            @endif
         </div>
     </div>
 </x-app-layout>

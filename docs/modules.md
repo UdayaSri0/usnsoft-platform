@@ -12,6 +12,7 @@ All modules live in `app/Modules`.
 - `Notifications`: queued business-event notification baseline
 - `Pages`: CMS pages, structured blocks, preview tokens, and scheduled publishing
 - `Products`: product catalog, protected downloads, review verification, SEO, and custom Blade/Tailwind admin workflows
+- `ClientRequests`: verified-user request intake, protected attachments, status history, requester/internal comment separation, and custom Blade/Tailwind staff workflows
 
 ## Reserved Modules (scaffolded for next stages)
 
@@ -19,7 +20,6 @@ All modules live in `app/Modules`.
 - `Services`: service catalog and solution offerings
 - `Faq`: FAQs and grouped entries
 - `Showcase`: testimonials/partners/team/timeline/achievements
-- `ClientRequests`: leads, inquiries, project/request intake
 - `Careers`: positions, applications, applicant workflow
 
 ## Shared Conventions
