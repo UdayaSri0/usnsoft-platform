@@ -31,7 +31,7 @@ docker compose run --rm node sh -lc "npm install && npm run build"
 
 Open:
 
-- App: `APP_URL` from `.env` (default `http://localhost:8080`)
+- App: `APP_URL` from `.env` (default `http://localhost:8088`)
 - Mailpit: `http://localhost:8025`
 
 ## 3) Daily Run

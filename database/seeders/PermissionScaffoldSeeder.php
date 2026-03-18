@@ -28,11 +28,14 @@ class PermissionScaffoldSeeder extends Seeder
                 'users.viewAny',
                 'users.view',
                 'users.create',
+                'users.createAdmin',
+                'users.createSuperAdmin',
                 'users.update',
                 'users.deactivate',
                 'users.restore',
                 'users.assignRoles',
                 'users.assignPermissions',
+                'users.passwordReset',
             ],
             'staff' => [
                 'staff.create',
@@ -52,6 +55,15 @@ class PermissionScaffoldSeeder extends Seeder
             ],
             'downloads' => [
                 'downloads.protected.access',
+            ],
+            'comments' => [
+                'comments.create',
+                'comments.viewAny',
+                'comments.moderate',
+            ],
+            'moderation' => [
+                'moderation.hidden.manage',
+                'moderation.notes.view',
             ],
             'requests' => [
                 'requests.create',

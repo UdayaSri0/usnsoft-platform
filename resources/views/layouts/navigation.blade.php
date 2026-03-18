@@ -26,6 +26,12 @@
                     @if (Auth::user()->hasPermission('products.view'))
                         <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-nav-link>
                     @endif
+                    @if (Auth::user()->hasPermission('users.viewAny'))
+                        <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('admin.accounts.*')">Accounts</x-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('comments.viewAny'))
+                        <x-nav-link :href="route('admin.comments.index')" :active="request()->routeIs('admin.comments.*')">Comments</x-nav-link>
+                    @endif
                     @if (Auth::user()->hasPermission('blog.view'))
                         <x-nav-link :href="route('admin.blog.index')" :active="request()->routeIs('admin.blog.*')">Blog</x-nav-link>
                     @endif
@@ -79,6 +85,12 @@
                                 @endif
                                 @if (Auth::user()->hasPermission('products.view'))
                                     <x-dropdown-link :href="route('admin.products.index')">Products</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('users.viewAny'))
+                                    <x-dropdown-link :href="route('admin.accounts.index')">Accounts</x-dropdown-link>
+                                @endif
+                                @if (Auth::user()->hasPermission('comments.viewAny'))
+                                    <x-dropdown-link :href="route('admin.comments.index')">Comments</x-dropdown-link>
                                 @endif
                                 @if (Auth::user()->hasPermission('blog.view'))
                                     <x-dropdown-link :href="route('admin.blog.index')">Blog</x-dropdown-link>
@@ -136,6 +148,12 @@
                     @endif
                     @if (Auth::user()->hasPermission('products.view'))
                         <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Products</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('users.viewAny'))
+                        <x-responsive-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('admin.accounts.*')">Accounts</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('comments.viewAny'))
+                        <x-responsive-nav-link :href="route('admin.comments.index')" :active="request()->routeIs('admin.comments.*')">Comments</x-responsive-nav-link>
                     @endif
                     @if (Auth::user()->hasPermission('blog.view'))
                         <x-responsive-nav-link :href="route('admin.blog.index')" :active="request()->routeIs('admin.blog.*')">Blog</x-responsive-nav-link>

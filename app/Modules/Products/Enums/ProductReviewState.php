@@ -9,10 +9,16 @@ enum ProductReviewState: string
     case Rejected = 'rejected';
     case Hidden = 'hidden';
     case Spam = 'spam';
+    case Flagged = 'flagged';
 
     public function isPubliclyVisible(): bool
     {
         return $this === self::Approved;
+    }
+
+    public function requiresHiddenContentPermission(): bool
+    {
+        return in_array($this, [self::Hidden, self::Spam, self::Flagged], true);
     }
 
     /**

@@ -12,22 +12,25 @@ use App\Modules\Blog\Controllers\Site\BlogController as SiteBlogController;
 use App\Modules\Careers\Controllers\Admin\JobApplicationController as AdminJobApplicationController;
 use App\Modules\Careers\Controllers\Admin\JobController as AdminJobController;
 use App\Modules\Careers\Controllers\Site\CareerController as SiteCareerController;
-use App\Modules\IdentityAccess\Controllers\InternalAccountController;
-use App\Modules\Faq\Controllers\Admin\FaqCategoryController as AdminFaqCategoryController;
-use App\Modules\Faq\Controllers\Admin\FaqController as AdminFaqController;
-use App\Modules\Faq\Controllers\Site\FaqController as SiteFaqController;
-use App\Modules\Pages\Controllers\Admin\ApprovalQueueController;
-use App\Modules\Pages\Controllers\Admin\BlockDefinitionController;
-use App\Modules\Pages\Controllers\Admin\PageController as AdminPageController;
-use App\Modules\Pages\Controllers\Admin\ReusableBlockController;
-use App\Modules\Pages\Controllers\Site\CmsPageController;
-use App\Modules\Pages\Controllers\Site\CmsPreviewController;
 use App\Modules\ClientRequests\Controllers\Account\ProjectRequestAttachmentController as AccountProjectRequestAttachmentController;
 use App\Modules\ClientRequests\Controllers\Account\ProjectRequestCommentController as AccountProjectRequestCommentController;
 use App\Modules\ClientRequests\Controllers\Account\ProjectRequestController as AccountProjectRequestController;
 use App\Modules\ClientRequests\Controllers\Admin\ProjectRequestCommentController as AdminProjectRequestCommentController;
 use App\Modules\ClientRequests\Controllers\Admin\ProjectRequestController as AdminProjectRequestController;
 use App\Modules\ClientRequests\Controllers\Admin\ProjectRequestStatusController as AdminProjectRequestStatusController;
+use App\Modules\Comments\Controllers\Admin\CommentController as AdminCommentController;
+use App\Modules\Comments\Controllers\Site\BlogCommentController;
+use App\Modules\Faq\Controllers\Admin\FaqCategoryController as AdminFaqCategoryController;
+use App\Modules\Faq\Controllers\Admin\FaqController as AdminFaqController;
+use App\Modules\Faq\Controllers\Site\FaqController as SiteFaqController;
+use App\Modules\IdentityAccess\Controllers\Admin\AccountController as AdminAccountController;
+use App\Modules\IdentityAccess\Controllers\InternalAccountController;
+use App\Modules\Pages\Controllers\Admin\ApprovalQueueController;
+use App\Modules\Pages\Controllers\Admin\BlockDefinitionController;
+use App\Modules\Pages\Controllers\Admin\PageController as AdminPageController;
+use App\Modules\Pages\Controllers\Admin\ReusableBlockController;
+use App\Modules\Pages\Controllers\Site\CmsPageController;
+use App\Modules\Pages\Controllers\Site\CmsPreviewController;
 use App\Modules\Products\Controllers\Admin\ProductCategoryController as AdminProductCategoryController;
 use App\Modules\Products\Controllers\Admin\ProductController as AdminProductController;
 use App\Modules\Products\Controllers\Admin\ProductReviewController as AdminProductReviewController;
@@ -41,7 +44,6 @@ use App\Modules\Showcase\Controllers\Admin\PartnerController as AdminPartnerCont
 use App\Modules\Showcase\Controllers\Admin\TeamMemberController as AdminTeamMemberController;
 use App\Modules\Showcase\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Modules\Showcase\Controllers\Admin\TimelineEntryController as AdminTimelineEntryController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', CmsPageController::class)->name('home');
@@ -98,6 +100,9 @@ Route::middleware(['auth', 'active', 'session.track'])->group(function (): void 
     Route::post('/products/{product:slug_current}/reviews', [SiteProductReviewController::class, 'store'])
         ->middleware('verified')
         ->name('products.reviews.store');
+    Route::post('/blog/{post:slug}/comments', [BlogCommentController::class, 'store'])
+        ->middleware(['verified', 'permission:comments.create'])
+        ->name('blog.comments.store');
 });
 
 Route::prefix('admin')
@@ -118,6 +123,42 @@ Route::prefix('admin')
         Route::post('/internal-accounts', [InternalAccountController::class, 'store'])
             ->middleware('superadmin')
             ->name('internal-accounts.store');
+
+        Route::prefix('accounts')->name('accounts.')->group(function (): void {
+            Route::get('/', [AdminAccountController::class, 'index'])
+                ->middleware('permission:users.viewAny')
+                ->name('index');
+            Route::get('/create', [AdminAccountController::class, 'create'])
+                ->middleware('permission:users.create')
+                ->name('create');
+            Route::post('/', [AdminAccountController::class, 'store'])
+                ->middleware('permission:users.create')
+                ->name('store');
+            Route::get('/{user}', [AdminAccountController::class, 'edit'])
+                ->middleware('permission:users.update')
+                ->name('edit');
+            Route::put('/{user}', [AdminAccountController::class, 'update'])
+                ->middleware('permission:users.update')
+                ->name('update');
+            Route::post('/{user}/deactivate', [AdminAccountController::class, 'deactivate'])
+                ->middleware('permission:users.deactivate')
+                ->name('deactivate');
+            Route::post('/{user}/reactivate', [AdminAccountController::class, 'reactivate'])
+                ->middleware('permission:users.deactivate')
+                ->name('reactivate');
+            Route::post('/{user}/password-reset-link', [AdminAccountController::class, 'sendPasswordResetLink'])
+                ->middleware('permission:users.passwordReset')
+                ->name('password-reset-link');
+        });
+
+        Route::prefix('comments')->name('comments.')->group(function (): void {
+            Route::get('/', [AdminCommentController::class, 'index'])
+                ->middleware('permission:comments.viewAny')
+                ->name('index');
+            Route::put('/{comment}', [AdminCommentController::class, 'moderate'])
+                ->middleware('permission:comments.moderate')
+                ->name('moderate');
+        });
 
         Route::prefix('cms')->name('cms.')->group(function (): void {
             Route::get('/pages', [AdminPageController::class, 'index'])

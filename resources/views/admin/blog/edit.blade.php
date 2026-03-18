@@ -90,6 +90,19 @@
                     @endif
                 </div>
             </section>
+
+            <section class="usn-card">
+                <h2 class="font-display text-xl font-semibold text-slate-950">Comment Governance</h2>
+                <p class="mt-2 text-sm text-slate-500">Public comments remain separate from internal moderation notes and stay hidden until approved.</p>
+
+                <div class="mt-5 flex flex-wrap items-center gap-3">
+                    <a href="{{ route('admin.comments.index', ['type' => 'blog_post', 'q' => $post->title]) }}" class="usn-btn-secondary">Open Comment Moderation</a>
+
+                    @if ($post->published_at)
+                        <a href="{{ route('blog.show', ['post' => $post->slug]) }}#comments" target="_blank" rel="noopener" class="usn-btn-secondary">Open Public Comment Area</a>
+                    @endif
+                </div>
+            </section>
         </div>
     </div>
 </x-app-layout>

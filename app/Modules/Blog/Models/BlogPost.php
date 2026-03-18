@@ -9,12 +9,15 @@ use App\Enums\ContentWorkflowState;
 use App\Enums\VisibilityState;
 use App\Models\Concerns\HasDirectContentWorkflow;
 use App\Models\User;
+use App\Modules\Comments\Enums\CommentStatus;
+use App\Modules\Comments\Models\Comment;
 use App\Modules\Media\Models\MediaAsset;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogPost extends Model implements Publishable, RequiresApproval
@@ -98,6 +101,16 @@ class BlogPost extends Model implements Publishable, RequiresApproval
     public function relatedPosts(): BelongsToMany
     {
         return $this->belongsToMany(self::class, 'blog_post_related', 'blog_post_id', 'related_blog_post_id')->withTimestamps();
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function approvedComments(): MorphMany
+    {
+        return $this->comments()->where('status', CommentStatus::Approved->value);
     }
 
     public function creator(): BelongsTo

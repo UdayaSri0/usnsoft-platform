@@ -5,6 +5,9 @@ namespace App\Modules\Products\Models;
 use App\Enums\ApprovalState;
 use App\Enums\ContentWorkflowState;
 use App\Models\User;
+use App\Modules\Comments\Enums\CommentStatus;
+use App\Modules\Comments\Models\Comment;
+use App\Modules\Media\Models\MediaAsset;
 use App\Modules\Products\Enums\ProductKind;
 use App\Modules\Products\Enums\ProductReviewState;
 use App\Modules\Products\Enums\ProductVisibility;
@@ -13,6 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -78,6 +82,16 @@ class Product extends Model
         return $this->hasMany(ProductReview::class);
     }
 
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function approvedComments(): MorphMany
+    {
+        return $this->comments()->where('status', CommentStatus::Approved->value);
+    }
+
     public function approvedReviews(): HasMany
     {
         return $this->reviews()->where('moderation_state', ProductReviewState::Approved->value);
@@ -95,7 +109,7 @@ class Product extends Model
 
     public function featuredImage(): BelongsTo
     {
-        return $this->belongsTo(\App\Modules\Media\Models\MediaAsset::class, 'featured_image_media_id');
+        return $this->belongsTo(MediaAsset::class, 'featured_image_media_id');
     }
 
     public function creator(): BelongsTo

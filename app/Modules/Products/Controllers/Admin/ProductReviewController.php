@@ -25,11 +25,15 @@ class ProductReviewController extends Controller
         $state = $request->string('state')->toString();
         $product = $request->string('product')->toString();
         $q = $request->string('q')->toString();
+        $dateFrom = $request->string('date_from')->toString();
+        $dateTo = $request->string('date_to')->toString();
 
         $reviews = ProductReview::query()
             ->with(['product', 'user', 'moderator'])
             ->when($state !== '', fn ($query) => $query->where('moderation_state', $state))
             ->when($product !== '', fn ($query) => $query->whereHas('product', fn ($productQuery) => $productQuery->where('slug_current', $product)))
+            ->when($dateFrom !== '', fn ($query) => $query->whereDate('submitted_at', '>=', $dateFrom))
+            ->when($dateTo !== '', fn ($query) => $query->whereDate('submitted_at', '<=', $dateTo))
             ->when($q !== '', function ($query) use ($q): void {
                 $query->where(function ($searchQuery) use ($q): void {
                     $searchQuery
@@ -46,18 +50,20 @@ class ProductReviewController extends Controller
         return view('admin.products.reviews.index', [
             'reviews' => $reviews,
             'products' => Product::query()->orderBy('name_current')->get(),
-            'filters' => compact('state', 'product', 'q'),
+            'filters' => compact('state', 'product', 'q', 'dateFrom', 'dateTo'),
             'states' => ProductReviewState::cases(),
         ]);
     }
 
     public function moderate(ProductReviewModerationRequest $request, ProductReview $review): RedirectResponse
     {
-        $this->authorize('moderate', $review);
+        $state = ProductReviewState::from($request->string('state')->toString());
+
+        $this->authorize('moderateState', [$review, $state]);
 
         $this->reviewService->moderate(
             review: $review,
-            state: ProductReviewState::from($request->string('state')->toString()),
+            state: $state,
             actor: $request->user(),
             notes: $request->string('notes')->toString() ?: null,
         );

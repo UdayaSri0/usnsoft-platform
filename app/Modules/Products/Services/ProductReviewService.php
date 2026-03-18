@@ -3,10 +3,13 @@
 namespace App\Modules\Products\Services;
 
 use App\Models\User;
+use App\Modules\Products\Enums\ProductPermission;
 use App\Modules\Products\Enums\ProductReviewState;
 use App\Modules\Products\Models\Product;
 use App\Modules\Products\Models\ProductReview;
+use App\Modules\Products\Notifications\StaffPendingProductReviewNotification;
 use App\Services\Audit\AuditLogService;
+use App\Services\Notifications\OperationalNotificationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Validation\ValidationException;
@@ -17,6 +20,7 @@ class ProductReviewService
         private readonly AuditLogService $auditLogService,
         private readonly DatabaseManager $database,
         private readonly ProductReviewEligibilityService $eligibilityService,
+        private readonly OperationalNotificationService $notificationService,
     ) {}
 
     /**
@@ -55,12 +59,29 @@ class ProductReviewService
             ],
         );
 
+        $review->loadMissing(['product', 'user']);
+
+        $this->notificationService->notifyUsersWithPermission(
+            ProductPermission::ReviewsModerate->value,
+            new StaffPendingProductReviewNotification($review),
+        );
+
+        $this->notificationService->dispatchBusinessEvent('products.review.submitted', [
+            'review_id' => $review->getKey(),
+            'product_id' => $product->getKey(),
+        ]);
+
         return $review;
     }
 
     public function moderate(ProductReview $review, ProductReviewState $state, User $actor, ?string $notes = null): ProductReview
     {
         return $this->database->transaction(function () use ($actor, $notes, $review, $state): ProductReview {
+            $oldValues = [
+                'moderation_state' => $review->moderation_state?->value,
+                'moderation_notes' => $review->moderation_notes,
+            ];
+
             $review->forceFill([
                 'moderation_state' => $state,
                 'moderated_at' => CarbonImmutable::now(),
@@ -76,14 +97,22 @@ class ProductReviewService
                 action: 'moderate_product_review',
                 actor: $actor,
                 auditable: $review,
+                oldValues: $oldValues,
                 newValues: [
                     'moderation_state' => $state->value,
+                    'moderation_notes' => $notes,
                 ],
                 metadata: [
                     'product_id' => $review->product_id,
                     'notes' => $notes,
                 ],
             );
+
+            $this->notificationService->dispatchBusinessEvent('products.review.moderated', [
+                'review_id' => $review->getKey(),
+                'product_id' => $review->product_id,
+                'moderation_state' => $state->value,
+            ]);
 
             return $review->refresh();
         });

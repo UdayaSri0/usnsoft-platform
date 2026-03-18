@@ -49,7 +49,7 @@ class BlogController extends Controller
 
         abort_unless($resolved, 404);
 
-        $resolved->loadMissing(['seoMeta.ogImage', 'featuredImage']);
+        $resolved->loadMissing(['seoMeta.ogImage', 'featuredImage', 'approvedComments.user']);
 
         $descriptionSource = $resolved->seoMeta?->meta_description
             ?? $resolved->excerpt
@@ -73,6 +73,7 @@ class BlogController extends Controller
         return view('blog.show', [
             'post' => $resolved,
             'blocks' => $this->structuredContentBlockService->renderableBlocks($resolved->content_blocks_json ?? []),
+            'approvedComments' => $resolved->approvedComments->sortByDesc('approved_at')->values(),
             'relatedPosts' => $this->catalogService->related($resolved, 3),
             'seo' => $seo,
         ]);

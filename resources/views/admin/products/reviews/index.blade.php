@@ -14,7 +14,7 @@
             @endif
 
             <form method="GET" action="{{ route('admin.products.reviews.index') }}" class="usn-toolbar">
-                <div class="grid flex-1 gap-3 md:grid-cols-3">
+                <div class="grid flex-1 gap-3 md:grid-cols-5">
                     <x-text-input name="q" :value="$filters['q']" placeholder="Search reviews, users, products" />
                     <x-select-input name="state">
                         <option value="">All moderation states</option>
@@ -28,6 +28,8 @@
                             <option value="{{ $product->slug_current }}" @selected($filters['product'] === $product->slug_current)>{{ $product->name_current }}</option>
                         @endforeach
                     </x-select-input>
+                    <x-text-input name="date_from" type="date" :value="$filters['dateFrom']" />
+                    <x-text-input name="date_to" type="date" :value="$filters['dateTo']" />
                 </div>
                 <div class="flex gap-3">
                     <button type="submit" class="usn-btn-primary">Filter</button>
@@ -53,9 +55,11 @@
                                         · submitted {{ $review->submitted_at->format('M j, Y g:i A') }}
                                     @endif
                                 </p>
-                                @if ($review->moderation_notes)
-                                    <p class="mt-3 text-sm text-slate-500">Moderation note: {{ $review->moderation_notes }}</p>
-                                @endif
+                                @can('viewInternalNotes', $review)
+                                    @if ($review->moderation_notes)
+                                        <p class="mt-3 text-sm text-slate-500">Moderation note: {{ $review->moderation_notes }}</p>
+                                    @endif
+                                @endcan
                             </div>
 
                             <form method="POST" action="{{ route('admin.products.reviews.moderate', ['review' => $review->getKey()]) }}" class="w-full max-w-md rounded-3xl border border-slate-200 bg-slate-50/70 p-4">
@@ -72,7 +76,11 @@
                                     </div>
                                     <div>
                                         <x-input-label :for="'review-notes-'.$review->getKey()" value="Notes" />
-                                        <x-textarea-input :id="'review-notes-'.$review->getKey()" name="notes" rows="3" class="mt-2 block w-full">{{ $review->moderation_notes }}</x-textarea-input>
+                                        @can('viewInternalNotes', $review)
+                                            <x-textarea-input :id="'review-notes-'.$review->getKey()" name="notes" rows="3" class="mt-2 block w-full">{{ $review->moderation_notes }}</x-textarea-input>
+                                        @else
+                                            <p class="mt-2 text-sm text-slate-500">Internal moderation notes are permission-restricted.</p>
+                                        @endcan
                                     </div>
                                     <button type="submit" class="usn-btn-primary w-full">Apply moderation</button>
                                 </div>

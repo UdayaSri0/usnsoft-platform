@@ -59,6 +59,8 @@
                         <a href="{{ route('products.show', ['product' => $product->slug_current]) }}" target="_blank" rel="noopener" class="usn-btn-secondary">Open Public Page</a>
                     @endif
 
+                    <a href="{{ route('admin.products.reviews.index', ['product' => $product->slug_current]) }}" class="usn-btn-secondary">Review Moderation</a>
+
                     @if ($draft->workflow_state === \App\Enums\ContentWorkflowState::Draft)
                         @can('submitForReview', $product)
                             <form method="POST" action="{{ route('admin.products.submit-review', ['product' => $product->getKey()]) }}" class="flex flex-wrap items-center gap-2">

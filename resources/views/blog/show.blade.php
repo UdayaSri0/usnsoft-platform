@@ -1,6 +1,12 @@
 <x-layouts.public :seo="$seo">
     <article class="usn-section">
         <div class="usn-container-wide">
+            @if (session('status') === 'blog-comment-submitted')
+                <x-ui.alert tone="success" title="Comment submitted">
+                    Your comment has been queued for moderation and will appear publicly only after approval.
+                </x-ui.alert>
+            @endif
+
             <a href="{{ route('blog.index') }}" class="usn-link">Back to Blog</a>
 
             <div class="mt-8 grid gap-10 lg:grid-cols-[1fr_320px]">
@@ -36,6 +42,61 @@
                             </div>
                         @endforelse
                     </div>
+
+                    <section id="comments" class="mt-12 usn-card">
+                        <div class="grid gap-8 xl:grid-cols-[1fr_0.92fr]">
+                            <div>
+                                <h2 class="font-display text-2xl font-semibold text-slate-950">Approved Comments</h2>
+                                <p class="mt-2 text-sm leading-6 text-slate-600">Only approved comments appear publicly. Internal moderation notes never appear on this page.</p>
+
+                                <div class="mt-6 space-y-4">
+                                    @forelse ($approvedComments as $comment)
+                                        <article class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                                <p class="font-semibold text-slate-900">{{ $comment->user?->name ?? 'Verified user' }}</p>
+                                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ $comment->approved_at?->format('M j, Y g:i A') ?? $comment->created_at?->format('M j, Y g:i A') }}</p>
+                                            </div>
+                                            <p class="mt-3 whitespace-pre-line text-sm leading-6 text-slate-700">{{ $comment->body }}</p>
+                                        </article>
+                                    @empty
+                                        <x-ui.empty-state title="No approved comments yet" description="Verified readers can submit comments, but every comment stays pending until moderation approval." />
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <div class="rounded-[1.8rem] border border-slate-200 bg-slate-50 p-6">
+                                <h3 class="font-display text-2xl font-semibold text-slate-950">Join the Discussion</h3>
+                                <p class="mt-3 text-sm leading-6 text-slate-600">Comments require a verified account and remain hidden publicly until moderation is complete.</p>
+
+                                @auth
+                                    @if (auth()->user()->hasPermission('comments.create') && auth()->user()->hasVerifiedEmail())
+                                        <form method="POST" action="{{ route('blog.comments.store', ['post' => $post->slug]) }}" class="mt-6 space-y-4">
+                                            @csrf
+                                            <div>
+                                                <x-input-label for="comment_body" value="Comment" />
+                                                <x-textarea-input id="comment_body" name="body" rows="6" class="mt-2 block w-full" required>{{ old('body') }}</x-textarea-input>
+                                                <x-input-error :messages="$errors->get('body')" class="mt-2" />
+                                            </div>
+                                            <button type="submit" class="usn-btn-primary">Submit Comment</button>
+                                        </form>
+                                    @elseif (! auth()->user()->hasVerifiedEmail())
+                                        <x-ui.alert tone="warning" title="Verification required">
+                                            Verify your email address before submitting a public comment.
+                                        </x-ui.alert>
+                                    @else
+                                        <x-ui.alert tone="info" title="Commenting unavailable">
+                                            This account cannot submit public comments.
+                                        </x-ui.alert>
+                                    @endif
+                                @else
+                                    <div class="mt-6 space-y-4">
+                                        <a href="{{ route('login') }}" class="usn-btn-primary">Log in to comment</a>
+                                        <p class="text-sm text-slate-500">New public comments require an authenticated and verified account.</p>
+                                    </div>
+                                @endauth
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
                 <aside class="space-y-6">

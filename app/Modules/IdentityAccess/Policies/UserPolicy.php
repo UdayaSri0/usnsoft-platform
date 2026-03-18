@@ -89,6 +89,44 @@ class UserPolicy
             && $user->hasRole(CoreRole::SuperAdmin);
     }
 
+    public function manage(User $user, User $target): bool
+    {
+        if ($target->hasRole(CoreRole::SuperAdmin) && ! $user->hasRole(CoreRole::SuperAdmin)) {
+            return false;
+        }
+
+        if ($target->isInternalStaff() && ! $user->hasRole(CoreRole::SuperAdmin)) {
+            return false;
+        }
+
+        return $user->hasPermission('users.update')
+            || $user->hasRole(CoreRole::SuperAdmin);
+    }
+
+    public function deactivateManaged(User $user, User $target): bool
+    {
+        if ($target->hasRole(CoreRole::SuperAdmin) && ! $user->hasRole(CoreRole::SuperAdmin)) {
+            return false;
+        }
+
+        if ($target->isInternalStaff() && ! $user->hasRole(CoreRole::SuperAdmin)) {
+            return false;
+        }
+
+        return $user->hasPermission('users.deactivate')
+            || $user->hasRole(CoreRole::SuperAdmin);
+    }
+
+    public function initiatePasswordReset(User $user, User $target): bool
+    {
+        if (! $this->manage($user, $target)) {
+            return false;
+        }
+
+        return $user->hasPermission('users.passwordReset')
+            || $user->hasRole(CoreRole::SuperAdmin);
+    }
+
     public function updateStaff(User $user, User $target): bool
     {
         if (! $target->isInternalStaff()) {

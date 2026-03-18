@@ -18,6 +18,22 @@
                     </a>
                 @endif
 
+                @if (auth()->user()->hasPermission('users.viewAny'))
+                    <a href="{{ route('admin.accounts.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Accounts</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Identity Management</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Create user accounts, enforce role boundaries, review verification state, and manage activation safely.</p>
+                    </a>
+                @endif
+
+                @if (auth()->user()->hasPermission('comments.viewAny'))
+                    <a href="{{ route('admin.comments.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Comments</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Moderation Queue</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Approve, reject, hide, or flag public comments without exposing internal moderation notes publicly.</p>
+                    </a>
+                @endif
+
                 @if (auth()->user()->hasPermission('products.view'))
                     <a href="{{ route('admin.products.index') }}" class="usn-card-link">
                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Products</p>

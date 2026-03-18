@@ -14,11 +14,14 @@ enum PermissionName: string
     case UsersViewAny = 'users.viewAny';
     case UsersView = 'users.view';
     case UsersCreate = 'users.create';
+    case UsersCreateAdmin = 'users.createAdmin';
+    case UsersCreateSuperAdmin = 'users.createSuperAdmin';
     case UsersUpdate = 'users.update';
     case UsersDeactivate = 'users.deactivate';
     case UsersRestore = 'users.restore';
     case UsersAssignRoles = 'users.assignRoles';
     case UsersAssignPermissions = 'users.assignPermissions';
+    case UsersPasswordReset = 'users.passwordReset';
     case StaffCreate = 'staff.create';
     case StaffViewAny = 'staff.viewAny';
     case StaffUpdate = 'staff.update';
@@ -30,6 +33,11 @@ enum PermissionName: string
     case AdminAccess = 'admin.access';
     case SuperAdminAccess = 'superadmin.access';
     case ProtectedDownloadsAccess = 'downloads.protected.access';
+    case CommentsCreate = 'comments.create';
+    case CommentsViewAny = 'comments.viewAny';
+    case CommentsModerate = 'comments.moderate';
+    case ModerationHiddenManage = 'moderation.hidden.manage';
+    case ModerationNotesView = 'moderation.notes.view';
     case RequestsCreate = 'requests.create';
     case RequestsViewOwn = 'requests.viewOwn';
     case RequestsViewAny = 'requests.viewAny';

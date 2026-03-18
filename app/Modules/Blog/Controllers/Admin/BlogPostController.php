@@ -2,19 +2,24 @@
 
 namespace App\Modules\Blog\Controllers\Admin;
 
+use App\Enums\ApprovalState;
 use App\Enums\ContentWorkflowState;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContentWorkflowActionRequest;
+use App\Models\User;
 use App\Modules\Blog\Models\BlogCategory;
 use App\Modules\Blog\Models\BlogPost;
 use App\Modules\Blog\Models\BlogTag;
 use App\Modules\Blog\Requests\BlogPostStoreRequest;
 use App\Modules\Blog\Requests\BlogPostUpdateRequest;
 use App\Modules\Blog\Services\BlogPostService;
+use App\Modules\Comments\Enums\CommentStatus;
 use App\Modules\Media\Models\MediaAsset;
 use App\Modules\Pages\Models\BlockDefinition;
 use App\Modules\Pages\Models\ReusableBlock;
+use App\Modules\Workflow\Notifications\StaffContentSubmittedForReviewNotification;
 use App\Services\Content\DirectContentWorkflowService;
+use App\Services\Notifications\OperationalNotificationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +30,7 @@ class BlogPostController extends Controller
     public function __construct(
         private readonly BlogPostService $blogPostService,
         private readonly DirectContentWorkflowService $workflowService,
+        private readonly OperationalNotificationService $operationalNotificationService,
     ) {}
 
     public function index(Request $request): View
@@ -34,15 +40,25 @@ class BlogPostController extends Controller
         $status = $request->string('status')->toString();
         $category = $request->string('category')->toString();
         $tag = $request->string('tag')->toString();
+        $author = $request->string('author')->toString();
         $featured = $request->string('featured')->toString();
+        $dateFrom = $request->string('date_from')->toString();
+        $dateTo = $request->string('date_to')->toString();
         $q = $request->string('q')->toString();
 
         $posts = BlogPost::query()
             ->with(['category', 'tags', 'author'])
+            ->withCount([
+                'approvedComments as approved_comments_count',
+                'comments as pending_comments_count' => fn ($query) => $query->where('status', CommentStatus::Pending->value),
+            ])
             ->search($q)
             ->when($category !== '', fn ($query) => $query->whereHas('category', fn ($categoryQuery) => $categoryQuery->where('slug', $category)))
             ->when($tag !== '', fn ($query) => $query->whereHas('tags', fn ($tagQuery) => $tagQuery->where('slug', $tag)))
+            ->when($author !== '', fn ($query) => $query->where('author_user_id', $author))
             ->when($featured !== '', fn ($query) => $query->where('featured_flag', filter_var($featured, FILTER_VALIDATE_BOOL)))
+            ->when($dateFrom !== '', fn ($query) => $query->whereDate('created_at', '>=', $dateFrom))
+            ->when($dateTo !== '', fn ($query) => $query->whereDate('created_at', '<=', $dateTo))
             ->when($status !== '', fn ($query) => $query->where('workflow_state', $status))
             ->orderByDesc('featured_flag')
             ->orderByDesc('published_at')
@@ -53,7 +69,8 @@ class BlogPostController extends Controller
             'posts' => $posts,
             'categories' => BlogCategory::query()->orderBy('sort_order')->orderBy('name')->get(),
             'tags' => BlogTag::query()->orderBy('name')->get(),
-            'filters' => compact('status', 'category', 'tag', 'featured', 'q'),
+            'authors' => User::query()->orderBy('name')->limit(200)->get(),
+            'filters' => compact('status', 'category', 'tag', 'author', 'featured', 'dateFrom', 'dateTo', 'q'),
             'workflowStates' => ContentWorkflowState::cases(),
         ]);
     }
@@ -101,6 +118,16 @@ class BlogPostController extends Controller
         $this->authorize('submitForReview', $post);
 
         $this->workflowService->submitForReview($post, $request->user(), $request->string('notes')->toString() ?: null);
+
+        $this->operationalNotificationService->notifyUsersWithPermission(
+            'blog.approve',
+            new StaffContentSubmittedForReviewNotification($post->fresh(), 'blog_post', $post->title),
+        );
+
+        $this->operationalNotificationService->dispatchBusinessEvent('blog.post.submitted_for_review', [
+            'post_id' => $post->getKey(),
+            'slug' => $post->slug,
+        ]);
 
         return back()->with('status', 'blog-post-submitted');
     }
@@ -177,7 +204,7 @@ class BlogPostController extends Controller
         return [
             'categories' => BlogCategory::query()->where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(),
             'tags' => BlogTag::query()->orderBy('name')->get(),
-            'authors' => \App\Models\User::query()->orderBy('name')->limit(200)->get(),
+            'authors' => User::query()->orderBy('name')->limit(200)->get(),
             'relatedPosts' => BlogPost::query()
                 ->when($post, fn ($query) => $query->whereKeyNot($post->getKey()))
                 ->orderByDesc('published_at')
@@ -187,7 +214,7 @@ class BlogPostController extends Controller
             'definitions' => BlockDefinition::query()->where('is_active', true)->orderBy('category')->orderBy('name')->get(),
             'approvedReusableBlocks' => ReusableBlock::query()
                 ->where('workflow_state', ContentWorkflowState::Published->value)
-                ->where('approval_state', \App\Enums\ApprovalState::Approved->value)
+                ->where('approval_state', ApprovalState::Approved->value)
                 ->orderBy('name')
                 ->get(),
         ];

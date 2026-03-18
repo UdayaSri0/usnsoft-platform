@@ -119,4 +119,28 @@ class PublicContentWorkflowTest extends TestCase
             'event_type' => 'workflow.state_transitioned',
         ]);
     }
+
+    public function test_in_review_blog_post_is_not_public(): void
+    {
+        $this->seedPublicContentCore();
+
+        $editor = $this->makeUserWithRole(CoreRole::Editor);
+        $post = $this->createDraftBlogPost($editor, [
+            'title' => 'Pending Review Post',
+            'slug' => 'pending-review-post',
+        ]);
+
+        $this->actingAs($editor)
+            ->post(route('admin.blog.submit-review', ['post' => $post->getKey()]), [
+                'notes' => 'Ready for editorial review.',
+            ])
+            ->assertRedirect();
+
+        $post->refresh();
+
+        $this->assertSame(ContentWorkflowState::InReview, $post->workflow_state);
+
+        $this->get(route('blog.show', ['post' => $post->slug]))
+            ->assertNotFound();
+    }
 }

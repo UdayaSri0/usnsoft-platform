@@ -20,6 +20,8 @@ use App\Modules\Products\Requests\ProductUpdateRequest;
 use App\Modules\Products\Requests\ProductWorkflowActionRequest;
 use App\Modules\Products\Services\ProductPreviewTokenService;
 use App\Modules\Products\Services\ProductWorkflowService;
+use App\Modules\Workflow\Notifications\StaffContentSubmittedForReviewNotification;
+use App\Services\Notifications\OperationalNotificationService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +32,7 @@ class ProductController extends Controller
     public function __construct(
         private readonly ProductPreviewTokenService $previewTokenService,
         private readonly ProductWorkflowService $workflowService,
+        private readonly OperationalNotificationService $operationalNotificationService,
     ) {}
 
     public function index(Request $request): View
@@ -151,6 +154,16 @@ class ProductController extends Controller
 
         $draft = $this->workflowService->ensureDraft($product, $request->user());
         $this->workflowService->submitForReview($draft, $request->user(), $request->string('notes')->toString() ?: null);
+
+        $this->operationalNotificationService->notifyUsersWithPermission(
+            'products.approve',
+            new StaffContentSubmittedForReviewNotification($draft->fresh(), 'product_version', $draft->name),
+        );
+
+        $this->operationalNotificationService->dispatchBusinessEvent('products.submitted_for_review', [
+            'product_id' => $product->getKey(),
+            'product_version_id' => $draft->getKey(),
+        ]);
 
         return redirect()
             ->route('admin.products.edit', ['product' => $product->getKey()])

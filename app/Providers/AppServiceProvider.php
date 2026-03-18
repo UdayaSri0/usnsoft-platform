@@ -14,6 +14,30 @@ use App\Modules\AuditSecurity\Policies\AuditLogPolicy;
 use App\Modules\AuditSecurity\Policies\SecurityEventPolicy;
 use App\Modules\AuditSecurity\Policies\UserDevicePolicy;
 use App\Modules\AuditSecurity\Policies\UserSessionHistoryPolicy;
+use App\Modules\Blog\Models\BlogCategory;
+use App\Modules\Blog\Models\BlogPost;
+use App\Modules\Blog\Models\BlogTag;
+use App\Modules\Blog\Policies\BlogPostPolicy;
+use App\Modules\Careers\Models\Job;
+use App\Modules\Careers\Models\JobApplication;
+use App\Modules\Careers\Models\JobApplicationFile;
+use App\Modules\Careers\Models\JobApplicationNote;
+use App\Modules\Careers\Policies\JobApplicationFilePolicy;
+use App\Modules\Careers\Policies\JobApplicationPolicy;
+use App\Modules\Careers\Policies\JobPolicy;
+use App\Modules\ClientRequests\Models\ProjectRequest;
+use App\Modules\ClientRequests\Models\ProjectRequestAttachment;
+use App\Modules\ClientRequests\Models\ProjectRequestComment;
+use App\Modules\ClientRequests\Models\ProjectRequestEvent;
+use App\Modules\ClientRequests\Models\ProjectRequestStatus;
+use App\Modules\ClientRequests\Policies\ProjectRequestAttachmentPolicy;
+use App\Modules\ClientRequests\Policies\ProjectRequestCommentPolicy;
+use App\Modules\ClientRequests\Policies\ProjectRequestPolicy;
+use App\Modules\Comments\Models\Comment;
+use App\Modules\Comments\Policies\CommentPolicy;
+use App\Modules\Faq\Models\Faq;
+use App\Modules\Faq\Models\FaqCategory;
+use App\Modules\Faq\Policies\FaqPolicy;
 use App\Modules\IdentityAccess\Models\AccountDeletionRequest;
 use App\Modules\IdentityAccess\Models\MfaMethod;
 use App\Modules\IdentityAccess\Models\Permission;
@@ -36,30 +60,8 @@ use App\Modules\Pages\Policies\BlockDefinitionPolicy;
 use App\Modules\Pages\Policies\PagePolicy;
 use App\Modules\Pages\Policies\PageVersionPolicy;
 use App\Modules\Pages\Policies\ReusableBlockPolicy;
-use App\Modules\Blog\Models\BlogCategory;
-use App\Modules\Blog\Models\BlogPost;
-use App\Modules\Blog\Models\BlogTag;
-use App\Modules\Blog\Policies\BlogPostPolicy;
-use App\Modules\Faq\Models\Faq;
-use App\Modules\Faq\Models\FaqCategory;
-use App\Modules\Faq\Policies\FaqPolicy;
-use App\Modules\Careers\Models\Job;
-use App\Modules\Careers\Models\JobApplication;
-use App\Modules\Careers\Models\JobApplicationFile;
-use App\Modules\Careers\Models\JobApplicationNote;
-use App\Modules\Careers\Policies\JobApplicationFilePolicy;
-use App\Modules\Careers\Policies\JobApplicationPolicy;
-use App\Modules\Careers\Policies\JobPolicy;
-use App\Modules\ClientRequests\Models\ProjectRequest;
-use App\Modules\ClientRequests\Models\ProjectRequestAttachment;
-use App\Modules\ClientRequests\Models\ProjectRequestComment;
-use App\Modules\ClientRequests\Models\ProjectRequestEvent;
-use App\Modules\ClientRequests\Models\ProjectRequestStatus;
-use App\Modules\ClientRequests\Policies\ProjectRequestAttachmentPolicy;
-use App\Modules\ClientRequests\Policies\ProjectRequestCommentPolicy;
-use App\Modules\ClientRequests\Policies\ProjectRequestPolicy;
-use App\Modules\Products\Models\ProductCategory;
 use App\Modules\Products\Models\Product;
+use App\Modules\Products\Models\ProductCategory;
 use App\Modules\Products\Models\ProductDownload;
 use App\Modules\Products\Models\ProductDownloadAccess;
 use App\Modules\Products\Models\ProductPreviewAccessToken;
@@ -67,10 +69,10 @@ use App\Modules\Products\Models\ProductReview;
 use App\Modules\Products\Models\ProductTag;
 use App\Modules\Products\Models\ProductUserVerification;
 use App\Modules\Products\Models\ProductVersion;
-use App\Modules\Products\Policies\ProtectedDownloadPolicy;
 use App\Modules\Products\Policies\ProductPolicy;
 use App\Modules\Products\Policies\ProductReviewPolicy;
 use App\Modules\Products\Policies\ProductVersionPolicy;
+use App\Modules\Products\Policies\ProtectedDownloadPolicy;
 use App\Modules\Seo\Models\SeoMeta;
 use App\Modules\Showcase\Models\Achievement;
 use App\Modules\Showcase\Models\Partner;
@@ -130,6 +132,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ProjectRequest::class, ProjectRequestPolicy::class);
         Gate::policy(ProjectRequestAttachment::class, ProjectRequestAttachmentPolicy::class);
         Gate::policy(ProjectRequestComment::class, ProjectRequestCommentPolicy::class);
+        Gate::policy(Comment::class, CommentPolicy::class);
         Gate::policy(Product::class, ProductPolicy::class);
         Gate::policy(ProductVersion::class, ProductVersionPolicy::class);
         Gate::policy(ProductReview::class, ProductReviewPolicy::class);
@@ -192,6 +195,7 @@ class AppServiceProvider extends ServiceProvider
             'project_request_comment' => ProjectRequestComment::class,
             'project_request_attachment' => ProjectRequestAttachment::class,
             'project_request_event' => ProjectRequestEvent::class,
+            'comment' => Comment::class,
             'product_category' => ProductCategory::class,
             'product' => Product::class,
             'product_version' => ProductVersion::class,

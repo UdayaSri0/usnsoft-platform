@@ -4,7 +4,6 @@ namespace Tests\Feature\Products;
 
 use App\Enums\CoreRole;
 use App\Modules\Products\Enums\ProductReviewState;
-use App\Modules\Products\Models\ProductReview;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Products\Concerns\InteractsWithProductPlatform;
 use Tests\TestCase;
@@ -95,6 +94,28 @@ class ProductReviewFlowTest extends TestCase
         $response->assertDontSee($hidden->body);
     }
 
+    public function test_internal_review_moderation_notes_are_hidden_from_public(): void
+    {
+        $this->seedProductPlatformCore();
+
+        $superAdmin = $this->makeUserWithRole(CoreRole::SuperAdmin);
+        $reviewer = $this->makeUserWithRole(CoreRole::User);
+        $product = $this->createPublishedProduct($superAdmin, [
+            'slug' => 'review-note-visibility-product',
+        ]);
+        $verification = $this->createReviewVerification($superAdmin, $reviewer, $product);
+
+        $review = $this->createReview($product, $reviewer, ProductReviewState::Approved, 5, $verification, $superAdmin);
+        $review->forceFill([
+            'moderation_notes' => 'Internal review moderation note.',
+        ])->save();
+
+        $this->get(route('products.show', ['product' => $product->slug_current]))
+            ->assertOk()
+            ->assertSee($review->body)
+            ->assertDontSee('Internal review moderation note.');
+    }
+
     public function test_moderation_action_updates_public_aggregates(): void
     {
         $this->seedProductPlatformCore();
@@ -120,5 +141,12 @@ class ProductReviewFlowTest extends TestCase
         $this->assertSame(ProductReviewState::Approved, $review->moderation_state);
         $this->assertSame(1, $product->approved_review_count);
         $this->assertSame('4.00', number_format((float) $product->average_rating, 2, '.', ''));
+        $this->assertDatabaseHas('audit_logs', [
+            'event_type' => 'products.review.moderated',
+            'action' => 'moderate_product_review',
+            'actor_id' => $admin->getKey(),
+            'auditable_type' => 'product_review',
+            'auditable_id' => $review->getKey(),
+        ]);
     }
 }
