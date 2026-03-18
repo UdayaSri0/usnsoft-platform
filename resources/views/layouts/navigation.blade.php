@@ -12,6 +12,7 @@
             <div class="hidden items-center gap-1 lg:flex">
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
                 <x-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-nav-link>
+                <x-nav-link :href="route('account.security.mfa.edit')" :active="request()->routeIs('account.security.mfa.*')">MFA</x-nav-link>
                 <x-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-nav-link>
                 <x-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">Devices</x-nav-link>
                 @if (Auth::user()->hasPermission('requests.viewOwn'))
@@ -47,6 +48,9 @@
                     @if (Auth::user()->hasPermission('requests.viewAny'))
                         <x-nav-link :href="route('admin.client-requests.index')" :active="request()->routeIs('admin.client-requests.*')">Client Requests</x-nav-link>
                     @endif
+                    @if (Auth::user()->hasPermission('security.logs.view') || Auth::user()->hasPermission('security.events.view') || Auth::user()->hasPermission('security.failedLogins.view') || Auth::user()->hasPermission('security.mfa.view'))
+                        <x-nav-link :href="route('admin.security.index')" :active="request()->routeIs('admin.security.*')">Security</x-nav-link>
+                    @endif
                 @endif
             </div>
         </div>
@@ -70,6 +74,7 @@
                     <x-slot name="content">
                         <div class="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Account</div>
                         <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                        <x-dropdown-link :href="route('account.security.mfa.edit')">MFA</x-dropdown-link>
                         <x-dropdown-link :href="route('account.sessions.index')">Session History</x-dropdown-link>
                         <x-dropdown-link :href="route('account.devices.index')">Device History</x-dropdown-link>
                         @if (Auth::user()->hasPermission('requests.viewOwn'))
@@ -110,6 +115,9 @@
                                 @if (Auth::user()->hasPermission('cms.approvals.view_queue'))
                                     <x-dropdown-link :href="route('admin.cms.approvals.index')">Approval Queue</x-dropdown-link>
                                 @endif
+                                @if (Auth::user()->hasPermission('security.logs.view') || Auth::user()->hasPermission('security.events.view') || Auth::user()->hasPermission('security.failedLogins.view') || Auth::user()->hasPermission('security.mfa.view'))
+                                    <x-dropdown-link :href="route('admin.security.index')">Security Center</x-dropdown-link>
+                                @endif
                             </div>
                         @endif
 
@@ -136,6 +144,7 @@
             <div class="space-y-1 text-sm">
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('profile.edit')" :active="request()->routeIs('profile.*')">Profile</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('account.security.mfa.edit')" :active="request()->routeIs('account.security.mfa.*')">MFA</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('account.sessions.index')" :active="request()->routeIs('account.sessions.*')">Sessions</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('account.devices.index')" :active="request()->routeIs('account.devices.*')">Devices</x-responsive-nav-link>
                 @if (Auth::user()->hasPermission('requests.viewOwn'))
@@ -169,6 +178,9 @@
                     @endif
                     @if (Auth::user()->hasPermission('requests.viewAny'))
                         <x-responsive-nav-link :href="route('admin.client-requests.index')" :active="request()->routeIs('admin.client-requests.*')">Client Requests</x-responsive-nav-link>
+                    @endif
+                    @if (Auth::user()->hasPermission('security.logs.view') || Auth::user()->hasPermission('security.events.view') || Auth::user()->hasPermission('security.failedLogins.view') || Auth::user()->hasPermission('security.mfa.view'))
+                        <x-responsive-nav-link :href="route('admin.security.index')" :active="request()->routeIs('admin.security.*')">Security</x-responsive-nav-link>
                     @endif
                 @endif
                 <x-responsive-nav-link :href="url('/')">Public Site</x-responsive-nav-link>

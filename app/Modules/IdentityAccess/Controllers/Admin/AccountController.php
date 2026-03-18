@@ -10,6 +10,7 @@ use App\Modules\IdentityAccess\Requests\Admin\ManagedAccountStoreRequest;
 use App\Modules\IdentityAccess\Requests\Admin\ManagedAccountUpdateRequest;
 use App\Modules\IdentityAccess\Services\Admin\AccountManagementService;
 use App\Modules\IdentityAccess\Services\Admin\AccountRoleScopeService;
+use App\Modules\IdentityAccess\Services\MfaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
@@ -20,6 +21,7 @@ class AccountController extends Controller
     public function __construct(
         private readonly AccountManagementService $accountManagementService,
         private readonly AccountRoleScopeService $roleScopeService,
+        private readonly MfaService $mfaService,
     ) {}
 
     public function index(Request $request): View
@@ -99,6 +101,7 @@ class AccountController extends Controller
         return view('admin.accounts.edit', [
             'account' => $user,
             'roles' => $this->roleScopeService->editableRoles($request->user(), $user),
+            'activeMfaMethod' => $this->mfaService->activeMethod($user),
             'auditTrail' => AuditLog::query()
                 ->where('auditable_type', $user->getMorphClass())
                 ->where('auditable_id', $user->getKey())
@@ -170,5 +173,22 @@ class AccountController extends Controller
         }
 
         return back()->with('status', 'managed-account-password-reset-sent');
+    }
+
+    public function disableMfa(Request $request, User $user): RedirectResponse
+    {
+        $this->authorize('manageMfa', $user);
+
+        $validated = $request->validate([
+            'reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $this->mfaService->disable(
+            actor: $request->user(),
+            target: $user,
+            reason: $validated['reason'] ?? 'staff-enforced disable',
+        );
+
+        return back()->with('status', 'managed-account-mfa-disabled');
     }
 }

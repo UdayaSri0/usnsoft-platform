@@ -5,6 +5,7 @@ use App\Http\Controllers\Account\AccountDeletionRequestController;
 use App\Http\Controllers\Account\DeviceHistoryController;
 use App\Http\Controllers\Account\SessionHistoryController;
 use App\Http\Controllers\ProfileController;
+use App\Modules\AuditSecurity\Controllers\Admin\SecurityController as AdminSecurityController;
 use App\Modules\Blog\Controllers\Admin\BlogCategoryController as AdminBlogCategoryController;
 use App\Modules\Blog\Controllers\Admin\BlogPostController as AdminBlogPostController;
 use App\Modules\Blog\Controllers\Admin\BlogTagController as AdminBlogTagController;
@@ -48,7 +49,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', CmsPageController::class)->name('home');
 
-Route::middleware(['auth', 'active', 'session.track'])->group(function (): void {
+Route::middleware(['auth', 'active', 'session.timeout', 'internal.mfa', 'session.track'])->group(function (): void {
     Route::get('/dashboard', AccountDashboardController::class)
         ->middleware('verified')
         ->name('dashboard');
@@ -106,12 +107,15 @@ Route::middleware(['auth', 'active', 'session.track'])->group(function (): void 
 });
 
 Route::prefix('admin')
-    ->middleware(['auth', 'active', 'admin.panel', 'internal.mfa'])
+    ->middleware(['auth', 'active', 'session.timeout', 'admin.panel', 'internal.mfa', 'session.track'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+
+        Route::get('/security', [AdminSecurityController::class, 'index'])
+            ->name('security.index');
 
         Route::get('/operations', function () {
             return view('admin.operations');
@@ -149,6 +153,9 @@ Route::prefix('admin')
             Route::post('/{user}/password-reset-link', [AdminAccountController::class, 'sendPasswordResetLink'])
                 ->middleware('permission:users.passwordReset')
                 ->name('password-reset-link');
+            Route::post('/{user}/mfa/disable', [AdminAccountController::class, 'disableMfa'])
+                ->middleware(['permission:security.mfa.manage', 'password.confirm'])
+                ->name('mfa.disable');
         });
 
         Route::prefix('comments')->name('comments.')->group(function (): void {

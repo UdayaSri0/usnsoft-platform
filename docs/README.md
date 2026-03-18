@@ -47,6 +47,21 @@ This folder is the onboarding and operations hub for the USNsoft platform. Start
   Queue and scheduler behavior for notifications and scheduled CMS publishing.
 - [runbooks/database-reset-and-seeding.md](runbooks/database-reset-and-seeding.md)  
   Migration/reset strategy and seed recovery.
+- [runbooks/backup-and-restore.md](runbooks/backup-and-restore.md)  
+  Backup commands, retention guidance, and restore sequencing.
+- [runbooks/health-checks.md](runbooks/health-checks.md)  
+  Lightweight health checks and release smoke tests.
+- [runbooks/release-hardening-checklist.md](runbooks/release-hardening-checklist.md)  
+  Pre-deploy and post-deploy production-minded checks.
+
+## Deployment
+
+- [deployment/environment-strategy.md](deployment/environment-strategy.md)  
+  Local, staging, and production configuration expectations.
+- [deployment/staging-vps.md](deployment/staging-vps.md)  
+  Cost-conscious staging guidance for a single VPS.
+- [deployment/production-vps.md](deployment/production-vps.md)  
+  Production deployment expectations for the current stack.
 
 ## UI
 

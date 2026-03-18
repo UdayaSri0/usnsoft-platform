@@ -2,10 +2,13 @@
 
 namespace App\Modules\Careers\Requests;
 
+use App\Http\Requests\Concerns\ValidatesAntiSpam;
 use Illuminate\Foundation\Http\FormRequest;
 
 class JobApplicationStoreRequest extends FormRequest
 {
+    use ValidatesAntiSpam;
+
     public function authorize(): bool
     {
         return true;
@@ -33,5 +36,10 @@ class JobApplicationStoreRequest extends FormRequest
             'supporting_documents' => ['nullable', 'array', 'max:5'],
             'supporting_documents.*' => ['file', 'mimes:'.$extensions, 'max:'.$maxKb],
         ];
+    }
+
+    protected function antiSpamFormKey(): string
+    {
+        return 'careers_application';
     }
 }

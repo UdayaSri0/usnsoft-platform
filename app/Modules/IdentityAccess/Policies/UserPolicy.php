@@ -127,6 +127,16 @@ class UserPolicy
             || $user->hasRole(CoreRole::SuperAdmin);
     }
 
+    public function manageMfa(User $user, User $target): bool
+    {
+        if ($user->is($target) && ! $target->isInternalStaff()) {
+            return true;
+        }
+
+        return $this->manage($user, $target)
+            && ($user->hasPermission('security.mfa.manage') || $user->hasRole(CoreRole::SuperAdmin));
+    }
+
     public function updateStaff(User $user, User $target): bool
     {
         if (! $target->isInternalStaff()) {

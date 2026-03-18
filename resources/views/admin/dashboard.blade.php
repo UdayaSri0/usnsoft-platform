@@ -42,6 +42,14 @@
                     </a>
                 @endif
 
+                @if (auth()->user()->hasPermission('security.logs.view') || auth()->user()->hasPermission('security.events.view') || auth()->user()->hasPermission('security.failedLogins.view') || auth()->user()->hasPermission('security.mfa.view'))
+                    <a href="{{ route('admin.security.index') }}" class="usn-card-link">
+                        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Security</p>
+                        <h3 class="mt-3 font-display text-xl font-semibold text-slate-950 dark:text-slate-50">Security Center</h3>
+                        <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-200">Review failed logins, suspicious access, staff MFA compliance, audit trails, and sensitive session visibility.</p>
+                    </a>
+                @endif
+
                 @if (auth()->user()->hasPermission('blog.view'))
                     <a href="{{ route('admin.blog.index') }}" class="usn-card-link">
                         <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Editorial</p>

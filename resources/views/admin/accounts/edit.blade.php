@@ -80,7 +80,34 @@
                                     </form>
                                 @endif
                             @endcan
+
+                            @can('manageMfa', $account)
+                                @if ($activeMfaMethod)
+                                    <form method="POST" action="{{ route('admin.accounts.mfa.disable', ['user' => $account->getKey()]) }}" class="space-y-3">
+                                        @csrf
+                                        <div>
+                                            <x-input-label for="mfa_disable_reason" value="MFA Disable Reason" />
+                                            <x-textarea-input id="mfa_disable_reason" name="reason" rows="3" class="mt-2 block w-full">{{ old('reason') }}</x-textarea-input>
+                                        </div>
+                                        <x-danger-button type="submit" class="w-full justify-center">Disable MFA</x-danger-button>
+                                    </form>
+                                @endif
+                            @endcan
                         </div>
+                    </section>
+
+                    <section class="usn-card">
+                        <h2 class="font-display text-xl font-semibold text-slate-950">MFA Status</h2>
+                        @if ($activeMfaMethod)
+                            <p class="mt-3 text-sm text-slate-600">Enabled for this account.</p>
+                            <p class="mt-2 text-xs text-slate-500">Last verified: {{ $activeMfaMethod->last_verified_at?->format('M j, Y g:i A') ?? 'Not yet recorded' }}</p>
+                        @elseif ($account->is_internal)
+                            <x-ui.alert tone="warning" title="Required but not enrolled">
+                                This internal account still needs a completed MFA enrollment before staff access should be considered compliant.
+                            </x-ui.alert>
+                        @else
+                            <p class="mt-3 text-sm text-slate-600">MFA is not enabled for this account.</p>
+                        @endif
                     </section>
 
                     <section class="usn-card">

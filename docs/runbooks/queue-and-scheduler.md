@@ -35,6 +35,31 @@ docker compose run --rm app php artisan queue:restart
 
 Then start `queue:work` again if needed.
 
+## VPS-Friendly Process Supervision
+
+Recommended low-cost production pattern:
+
+- `systemd` or Supervisor for `queue:work`
+- cron or systemd timer for `php artisan schedule:run` every minute
+
+Example worker command:
+
+```bash
+php artisan queue:work redis --sleep=3 --tries=3 --timeout=90
+```
+
+Example scheduler command:
+
+```bash
+php artisan schedule:run
+```
+
+Operational expectations:
+
+- restart workers after deploys with `php artisan queue:restart`
+- review `failed_jobs` regularly
+- keep Redis healthy before blaming business workflows
+
 ## Scheduler Basics
 
 Run a local scheduler worker:

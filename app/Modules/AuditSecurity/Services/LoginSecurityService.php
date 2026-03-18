@@ -98,6 +98,7 @@ class LoginSecurityService
             'session_id' => $sessionId,
             'device_id' => $device->getKey(),
             'is_new_device' => $isNewDevice,
+            'internal_staff' => $user->isInternalStaff(),
         ]);
 
         $this->auditLogService->record(
@@ -113,10 +114,11 @@ class LoginSecurityService
         );
 
         if ($isSuspicious) {
-            $this->securityEventService->record(SecurityEventType::LoginSuspicious, $user, 'warning', [
+            $this->securityEventService->record(SecurityEventType::LoginSuspicious, $user, $user->isInternalStaff() ? 'critical' : 'warning', [
                 'session_id' => $sessionId,
                 'device_id' => $device->getKey(),
                 'reason' => $isNewDevice ? 'new_device' : 'unusual_context',
+                'internal_staff' => $user->isInternalStaff(),
             ]);
         }
 
@@ -239,6 +241,10 @@ class LoginSecurityService
             ]);
 
         if ($invalidated > 0) {
+            $this->securityEventService->record('session.invalidate.others', $user, 'warning', [
+                'count' => $invalidated,
+            ]);
+
             $this->auditLogService->record(
                 eventType: 'session.invalidate.others',
                 action: 'invalidate_other_sessions',

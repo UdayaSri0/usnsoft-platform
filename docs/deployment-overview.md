@@ -1,4 +1,4 @@
-# Deployment Overview (Stage 0)
+# Deployment Overview
 
 ## Environments
 
@@ -32,3 +32,9 @@
 - Use `php artisan migrate --force` during controlled deployments.
 - Queue workers must run continuously in staging/production.
 - Environment secrets (`APP_KEY`, DB, Redis, storage keys, superadmin bootstrap values) must be externally managed.
+- See also:
+  - `docs/deployment/environment-strategy.md`
+  - `docs/deployment/staging-vps.md`
+  - `docs/deployment/production-vps.md`
+  - `docs/runbooks/backup-and-restore.md`
+  - `docs/runbooks/health-checks.md`

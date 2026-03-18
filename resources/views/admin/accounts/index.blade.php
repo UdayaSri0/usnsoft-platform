@@ -62,6 +62,7 @@
                                 <th class="pb-3">Verified</th>
                                 <th class="pb-3">Status</th>
                                 <th class="pb-3">Type</th>
+                                <th class="pb-3">MFA</th>
                                 <th class="pb-3">Created</th>
                                 <th class="pb-3 text-right">Action</th>
                             </tr>
@@ -104,6 +105,15 @@
                                             <span class="usn-badge-muted">Public User</span>
                                         @endif
                                     </td>
+                                    <td class="py-4">
+                                        @if ($account->mfa_enabled_at)
+                                            <span class="usn-badge-success">Enabled</span>
+                                        @elseif ($account->is_internal)
+                                            <span class="usn-badge-warning">Required</span>
+                                        @else
+                                            <span class="usn-badge-muted">Optional</span>
+                                        @endif
+                                    </td>
                                     <td class="py-4">{{ $account->created_at?->format('M j, Y') ?? 'Unknown' }}</td>
                                     <td class="py-4 text-right">
                                         @can('manage', $account)
@@ -115,7 +125,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="py-6">
+                                    <td colspan="8" class="py-6">
                                         <x-ui.empty-state title="No accounts found" description="Customer users and internal staff accounts will appear here once provisioned." />
                                     </td>
                                 </tr>

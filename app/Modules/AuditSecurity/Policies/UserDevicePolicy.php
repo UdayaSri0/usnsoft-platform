@@ -9,7 +9,7 @@ class UserDevicePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('security.logs.view');
+        return $user->hasPermission('security.devices.viewAny');
     }
 
     public function view(User $user, UserDevice $device): bool

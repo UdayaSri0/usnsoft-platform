@@ -31,7 +31,7 @@ class CareerApplicationsTest extends TestCase
         $this->post(route('careers.apply', ['job' => $job->slug]), [
             'full_name' => 'Jane Applicant',
             'email' => 'jane@example.test',
-            'cv' => UploadedFile::fake()->image('resume.png'),
+            'cv' => UploadedFile::fake()->create('resume.png', 64, 'image/png'),
         ])->assertSessionHasErrors('cv');
 
         $this->post(route('careers.apply', ['job' => $job->slug]), [
@@ -97,6 +97,11 @@ class CareerApplicationsTest extends TestCase
             'auditable_type' => $file->getMorphClass(),
             'auditable_id' => $file->getKey(),
             'event_type' => 'careers.application.file_downloaded',
+        ]);
+
+        $this->assertDatabaseHas('security_events', [
+            'event_type' => 'protected_file.job_application.accessed',
+            'user_id' => $admin->getKey(),
         ]);
     }
 

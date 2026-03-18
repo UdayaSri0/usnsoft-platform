@@ -9,7 +9,7 @@ class UserSessionHistoryPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission('security.logs.view');
+        return $user->hasPermission('security.sessions.viewAny');
     }
 
     public function view(User $user, UserSessionHistory $history): bool

@@ -77,6 +77,7 @@
                                                 <x-textarea-input id="comment_body" name="body" rows="6" class="mt-2 block w-full" required>{{ old('body') }}</x-textarea-input>
                                                 <x-input-error :messages="$errors->get('body')" class="mt-2" />
                                             </div>
+                                            <x-security.anti-spam-fields form="blog_comment" />
                                             <button type="submit" class="usn-btn-primary">Submit Comment</button>
                                         </form>
                                     @elseif (! auth()->user()->hasVerifiedEmail())

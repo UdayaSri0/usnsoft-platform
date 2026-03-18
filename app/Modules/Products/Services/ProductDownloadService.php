@@ -11,6 +11,7 @@ use App\Modules\Products\Models\Product;
 use App\Modules\Products\Models\ProductDownload;
 use App\Modules\Products\Models\ProductDownloadAccess;
 use App\Modules\Products\Models\ProductUserVerification;
+use App\Modules\AuditSecurity\Services\SecurityEventService;
 use App\Services\Audit\AuditLogService;
 use Carbon\CarbonImmutable;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +23,7 @@ class ProductDownloadService
 {
     public function __construct(
         private readonly AuditLogService $auditLogService,
+        private readonly SecurityEventService $securityEventService,
     ) {}
 
     public function authorize(User $user, Product $product, ProductDownload $download): bool
@@ -79,6 +81,13 @@ class ProductDownloadService
                 ],
             );
 
+            $this->securityEventService->record('protected_file.download.denied', $user, 'warning', [
+                'product_id' => $product->getKey(),
+                'product_download_id' => $download->getKey(),
+                'download_access_id' => $access->getKey(),
+                'denied_reason' => $deniedReason,
+            ]);
+
             if ($deniedReason === 'verified_email_required') {
                 return redirect()
                     ->route('verification.notice')
@@ -108,6 +117,13 @@ class ProductDownloadService
                 'download_mode' => $download->download_mode->value,
             ],
         );
+
+        $this->securityEventService->record('protected_file.download.authorized', $user, 'info', [
+            'product_id' => $product->getKey(),
+            'product_download_id' => $download->getKey(),
+            'download_access_id' => $access->getKey(),
+            'download_mode' => $download->download_mode->value,
+        ]);
 
         return match ($download->download_mode) {
             ProductDownloadMode::ExternalLink,

@@ -9,6 +9,7 @@ use App\Modules\ClientRequests\Enums\ProjectRequestAttachmentScanStatus;
 use App\Modules\ClientRequests\Models\ProjectRequest;
 use App\Modules\ClientRequests\Models\ProjectRequestAttachment;
 use App\Modules\Media\Models\MediaAsset;
+use App\Modules\AuditSecurity\Services\SecurityEventService;
 use App\Services\Audit\AuditLogService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,7 @@ class ProjectRequestAttachmentService
 {
     public function __construct(
         private readonly AuditLogService $auditLogService,
+        private readonly SecurityEventService $securityEventService,
     ) {}
 
     public function storeUploadedFile(ProjectRequest $projectRequest, UploadedFile $file, ?User $actor = null): ProjectRequestAttachment
@@ -112,6 +114,11 @@ class ProjectRequestAttachmentService
                 'project_request_id' => $attachment->project_request_id,
             ],
         );
+
+        $this->securityEventService->record('protected_file.request_attachment.accessed', $actor, 'info', [
+            'project_request_id' => $attachment->project_request_id,
+            'attachment_id' => $attachment->getKey(),
+        ]);
 
         return Storage::disk($attachment->disk)->download($attachment->path, $attachment->original_name);
     }

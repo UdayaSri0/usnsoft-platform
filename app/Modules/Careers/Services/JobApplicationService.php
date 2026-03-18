@@ -12,6 +12,7 @@ use App\Modules\Careers\Models\JobApplication;
 use App\Modules\Careers\Models\JobApplicationFile;
 use App\Modules\Careers\Models\JobApplicationNote;
 use App\Modules\Media\Models\MediaAsset;
+use App\Modules\AuditSecurity\Services\SecurityEventService;
 use App\Modules\Workflow\Models\StatusHistory;
 use App\Services\Audit\AuditLogService;
 use Carbon\CarbonImmutable;
@@ -27,6 +28,7 @@ class JobApplicationService
     public function __construct(
         private readonly AuditLogService $auditLogService,
         private readonly DatabaseManager $database,
+        private readonly SecurityEventService $securityEventService,
     ) {}
 
     /**
@@ -155,6 +157,11 @@ class JobApplicationService
             auditable: $file,
             metadata: ['job_application_id' => $file->job_application_id],
         );
+
+        $this->securityEventService->record('protected_file.job_application.accessed', $actor, 'info', [
+            'job_application_id' => $file->job_application_id,
+            'job_application_file_id' => $file->getKey(),
+        ]);
 
         return Storage::disk($file->disk)->download($file->path, $file->original_name);
     }

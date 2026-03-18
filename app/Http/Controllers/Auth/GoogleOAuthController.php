@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Modules\AuditSecurity\Services\LoginSecurityService;
 use App\Modules\IdentityAccess\Services\SocialAuthService;
+use App\Modules\IdentityAccess\Services\StaffMfaService;
 use DomainException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -28,6 +29,7 @@ class GoogleOAuthController extends Controller
     public function callback(
         SocialAuthService $socialAuthService,
         LoginSecurityService $loginSecurityService,
+        StaffMfaService $staffMfaService,
     ): RedirectResponse {
         try {
             $socialiteUser = $socialAuthService->fetchGoogleUser();
@@ -48,6 +50,7 @@ class GoogleOAuthController extends Controller
 
         Auth::login($user, true);
         request()->session()->regenerate();
+        $staffMfaService->clearSessionState(request()->session());
         $loginSecurityService->recordSuccessfulLogin($user, request()->session()->getId());
 
         if ($user->wasRecentlyCreated) {

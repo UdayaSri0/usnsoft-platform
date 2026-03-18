@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Modules\AuditSecurity\Services\SecurityEventService;
 use App\Modules\IdentityAccess\Models\Role;
 use App\Services\Audit\AuditLogService;
+use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class RoleAssignmentService
@@ -24,6 +25,7 @@ class RoleAssignmentService
         }
 
         $target->assignRole($role, $actor->getKey());
+        $this->syncMfaRequirement($target);
 
         $this->securityEventService->record(SecurityEventType::RoleChanged, $target, 'info', [
             'action' => 'assigned',
@@ -51,6 +53,7 @@ class RoleAssignmentService
         }
 
         $target->removeRole($role);
+        $this->syncMfaRequirement($target);
 
         $this->securityEventService->record(SecurityEventType::RoleChanged, $target, 'warning', [
             'action' => 'removed',
@@ -90,5 +93,18 @@ class RoleAssignmentService
         }
 
         return true;
+    }
+
+    private function syncMfaRequirement(User $target): void
+    {
+        $target->refresh();
+
+        $requiresMfa = $target->roles()->where('is_internal', true)->exists();
+
+        $target->forceFill([
+            'mfa_required_at' => $requiresMfa
+                ? ($target->mfa_required_at ?? CarbonImmutable::now())
+                : null,
+        ])->save();
     }
 }

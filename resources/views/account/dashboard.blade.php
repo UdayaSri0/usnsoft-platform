@@ -28,10 +28,11 @@
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Phone</dt><dd class="mt-2 text-sm text-slate-800">{{ $user->phone ?: '-' }}</dd></div>
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Status</dt><dd class="mt-2 text-sm text-slate-800">{{ $user->status->value }}</dd></div>
                         <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Verified</dt><dd class="mt-2 text-sm text-slate-800">{{ $user->hasVerifiedEmail() ? 'Yes' : 'No' }}</dd></div>
-                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">MFA</dt><dd class="mt-2 text-sm text-slate-800">{{ $user->mfa_enabled_at ? 'Enabled' : 'Ready (not enabled)' }}</dd></div>
+                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4"><dt class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">MFA</dt><dd class="mt-2 text-sm text-slate-800">{{ $user->mfa_enabled_at ? 'Enabled' : ($user->isInternalStaff() ? 'Required / Not enabled' : 'Optional / Not enabled') }}</dd></div>
                     </dl>
                     <div class="mt-6 flex flex-wrap gap-3">
                         <a class="usn-btn-secondary" href="{{ route('profile.edit') }}">Manage Profile</a>
+                        <a class="usn-btn-secondary" href="{{ route('account.security.mfa.edit') }}">Manage MFA</a>
                         <a class="usn-btn-secondary" href="{{ route('account.sessions.index') }}">Session History</a>
                         <a class="usn-btn-secondary" href="{{ route('account.devices.index') }}">Device History</a>
                         @if ($user->hasPermission('requests.viewOwn'))

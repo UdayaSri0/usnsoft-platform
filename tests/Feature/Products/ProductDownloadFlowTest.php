@@ -54,6 +54,11 @@ class ProductDownloadFlowTest extends TestCase
         $this->actingAs($user)
             ->get(route('products.downloads.show', ['product' => $product->slug_current, 'download' => $download->getKey()]))
             ->assertForbidden();
+
+        $this->assertDatabaseHas('security_events', [
+            'event_type' => 'protected_file.download.denied',
+            'user_id' => $user->getKey(),
+        ]);
     }
 
     public function test_logged_in_eligible_user_can_download_authorized_product_and_gain_review_verification(): void
@@ -84,6 +89,11 @@ class ProductDownloadFlowTest extends TestCase
             ->where('product_id', $product->getKey())
             ->where('user_id', $user->getKey())
             ->exists());
+
+        $this->assertDatabaseHas('security_events', [
+            'event_type' => 'protected_file.download.authorized',
+            'user_id' => $user->getKey(),
+        ]);
     }
 
     public function test_external_download_mode_redirects_after_authorization_and_logging(): void

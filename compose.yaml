@@ -32,11 +32,11 @@ services:
     image: postgres:17-alpine
     container_name: usnsoft_postgres
     environment:
-      POSTGRES_DB: usnsoft
-      POSTGRES_USER: usnsoft
-      POSTGRES_PASSWORD: usnsoft_dev_password
+      POSTGRES_DB: ${DB_DATABASE:-usnsoft}
+      POSTGRES_USER: ${DB_USERNAME:-usnsoft}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-usnsoft_dev_password}
     ports:
-      - "5432:5432"
+      - "${USNSOFT_POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -51,7 +51,7 @@ services:
     image: redis:7-alpine
     container_name: usnsoft_redis
     ports:
-      - "6379:6379"
+      - "${USNSOFT_REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
@@ -66,7 +66,7 @@ services:
       - ./:/var/www/html
     command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     ports:
-      - "5173:5173"
+      - "${USNSOFT_VITE_PORT:-5173}:5173"
     networks:
       - usnsoft
 
@@ -74,7 +74,7 @@ services:
     image: axllent/mailpit:latest
     container_name: usnsoft_mailpit
     ports:
-      - "8025:8025"
+      - "${USNSOFT_MAILPIT_PORT:-8025}:8025"
     networks:
       - usnsoft
 

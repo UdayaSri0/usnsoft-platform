@@ -96,5 +96,10 @@ class ProjectRequestVisibilityTest extends TestCase
             'auditable_id' => $attachment->getKey(),
             'event_type' => 'requests.attachment.downloaded',
         ]);
+
+        $this->assertDatabaseHas('security_events', [
+            'event_type' => 'protected_file.request_attachment.accessed',
+            'user_id' => $requester->getKey(),
+        ]);
     }
 }

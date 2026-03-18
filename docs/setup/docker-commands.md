@@ -71,6 +71,8 @@ docker compose run --rm app php artisan schedule:run
 docker compose exec postgres psql -U usnsoft -d usnsoft
 docker compose run --rm app php artisan migrate:fresh --seed
 docker compose run --rm app php artisan db:seed --class=LocalDevelopmentSeeder
+./scripts/ops/backup-postgres.sh
+./scripts/ops/restore-postgres.sh path/to/backup.sql.gz
 ```
 
 ## Asset and Storage Helpers
@@ -79,4 +81,5 @@ docker compose run --rm app php artisan db:seed --class=LocalDevelopmentSeeder
 docker compose run --rm app php artisan storage:link
 docker compose up -d node
 docker compose run --rm node sh -lc "npm run build"
+./scripts/ops/backup-storage.sh
 ```

@@ -2,6 +2,7 @@
 
 namespace App\Modules\ClientRequests\Requests;
 
+use App\Http\Requests\Concerns\ValidatesAntiSpam;
 use App\Modules\ClientRequests\Enums\ProjectRequestType;
 use App\Modules\ClientRequests\Models\ProjectRequest;
 use Illuminate\Foundation\Http\FormRequest;
@@ -10,6 +11,8 @@ use Illuminate\Validation\Rules\File;
 
 class ProjectRequestStoreRequest extends FormRequest
 {
+    use ValidatesAntiSpam;
+
     public function authorize(): bool
     {
         return $this->user()?->can('create', ProjectRequest::class) ?? false;
@@ -46,5 +49,10 @@ class ProjectRequestStoreRequest extends FormRequest
                 File::types($allowedExtensions),
             ],
         ];
+    }
+
+    protected function antiSpamFormKey(): string
+    {
+        return 'client_request';
     }
 }

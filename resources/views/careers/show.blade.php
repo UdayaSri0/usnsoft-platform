@@ -94,6 +94,7 @@
                                 <x-input-label for="supporting_documents" value="Supporting documents" />
                                 <input id="supporting_documents" type="file" name="supporting_documents[]" multiple class="mt-2 block w-full usn-file-input">
                             </div>
+                            <x-security.anti-spam-fields form="careers_application" />
                             <x-primary-button>Submit Application</x-primary-button>
                         </form>
                     @else

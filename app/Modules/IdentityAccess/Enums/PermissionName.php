@@ -8,9 +8,15 @@ enum PermissionName: string
     case ProfileUpdate = 'profile.update';
     case AccountRequestDeletion = 'account.requestDeletion';
     case SecuritySessionsViewOwn = 'security.sessions.viewOwn';
+    case SecuritySessionsViewAny = 'security.sessions.viewAny';
     case SecurityDevicesViewOwn = 'security.devices.viewOwn';
+    case SecurityDevicesViewAny = 'security.devices.viewAny';
     case SecurityLogsView = 'security.logs.view';
     case SecurityEventsView = 'security.events.view';
+    case SecurityFailedLoginsView = 'security.failedLogins.view';
+    case SecurityMfaView = 'security.mfa.view';
+    case SecurityMfaManage = 'security.mfa.manage';
+    case SecurityPolicyManage = 'security.policy.manage';
     case UsersViewAny = 'users.viewAny';
     case UsersView = 'users.view';
     case UsersCreate = 'users.create';

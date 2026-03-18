@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Account\MfaController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -43,6 +44,20 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::prefix('account/security/mfa')->name('account.security.mfa.')->middleware(['session.timeout', 'session.track'])->group(function (): void {
+        Route::get('/', [MfaController::class, 'edit'])->name('edit');
+        Route::post('/enrollment', [MfaController::class, 'start'])->name('start');
+        Route::post('/confirm', [MfaController::class, 'confirm'])->name('confirm');
+        Route::get('/challenge', [MfaController::class, 'challenge'])->name('challenge');
+        Route::post('/challenge', [MfaController::class, 'verifyChallenge'])->name('challenge.verify');
+        Route::post('/recovery-codes', [MfaController::class, 'regenerateRecoveryCodes'])
+            ->middleware('password.confirm')
+            ->name('recovery-codes.regenerate');
+        Route::post('/disable', [MfaController::class, 'disable'])
+            ->middleware('password.confirm')
+            ->name('disable');
+    });
+
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('verification.notice');
 

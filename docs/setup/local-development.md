@@ -23,6 +23,8 @@ cp .env.example .env
 ```dotenv
 USNSOFT_HTTP_PORT=8080
 USNSOFT_SEED_DEMO_USERS=true
+USNSOFT_ANTI_SPAM_DRIVER=null
+USNSOFT_ENFORCE_INTERNAL_MFA=false
 ```
 
 If `8080` is already in use on your machine, choose another free value such as `8088` and keep `APP_URL` aligned with it.
@@ -116,6 +118,8 @@ docker compose exec postgres psql -U usnsoft -d usnsoft
 
 Mailpit captures local mail at `http://localhost:8025`. No real SMTP credentials are required for local development with the default `.env.example`.
 
+Local anti-spam defaults to the null provider. That keeps career applications, blog comments, and authenticated request forms testable without live CAPTCHA keys.
+
 ## Sample Accounts
 
 If `USNSOFT_SEED_DEMO_USERS=true` was set before `migrate --seed`, the development accounts are created automatically. See [../access/sample-logins.md](../access/sample-logins.md).
@@ -140,3 +144,5 @@ docker compose run --rm app php artisan db:seed --class=LocalDevelopmentSeeder
   Confirm `APP_ENV=local` and seed `LocalDevelopmentSeeder`
 - Login works but protected routes fail  
   Use a verified seeded account or verify the email for a custom account
+- Staff login redirects to MFA setup unexpectedly  
+  Check `USNSOFT_ENFORCE_INTERNAL_MFA`; keep it `false` locally unless you are specifically testing staff MFA enforcement

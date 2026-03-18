@@ -20,9 +20,15 @@ class PermissionScaffoldSeeder extends Seeder
             ],
             'security' => [
                 'security.sessions.viewOwn',
+                'security.sessions.viewAny',
                 'security.devices.viewOwn',
+                'security.devices.viewAny',
                 'security.logs.view',
                 'security.events.view',
+                'security.failedLogins.view',
+                'security.mfa.view',
+                'security.mfa.manage',
+                'security.policy.manage',
             ],
             'users' => [
                 'users.viewAny',

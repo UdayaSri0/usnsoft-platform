@@ -1,4 +1,4 @@
-# Security Baseline (Stage 0)
+# Security Baseline
 
 ## Identity and Access
 
@@ -25,9 +25,16 @@
 - Queue-ready business notification architecture.
 - Storage abstraction supports local development and S3-compatible production.
 
-## Stage 0 Security Gaps (Planned)
+## Phase 1 Hardening In Place
 
-- MFA enforcement for all internal staff (policy + middleware + UX)
-- Login throttling/suspicious login automation and device history UI
-- CAPTCHA/anti-spam for public forms
-- Security headers hardening middleware/profile
+- Staff MFA architecture with TOTP setup, recovery codes, and enforced challenge/setup routing for internal accounts.
+- Failed login, suspicious login, session timeout, and protected-file access signals feed into `security_events`.
+- Audit/security visibility is split by permission area instead of one broad log gate.
+- Public-form anti-spam abstraction supports a null local provider and a Turnstile production path.
+- Security headers are applied through middleware with environment-aware HSTS handling.
+
+## Remaining Future Work
+
+- CSP rollout from report-only to enforced once front-end compatibility is fully audited.
+- archival strategy for very old audit/security records
+- optional second-step approvals for more destructive operations if future workflows need them

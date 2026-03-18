@@ -145,6 +145,10 @@
                             <li>Sales Manager and SuperAdmin receive the initial in-app notification automatically.</li>
                         </ul>
 
+                        <div class="mt-6">
+                            <x-security.anti-spam-fields form="client_request" />
+                        </div>
+
                         <div class="mt-6 flex flex-wrap gap-3">
                             <button type="submit" class="usn-btn-primary">Submit Request</button>
                             <a href="{{ route('client-requests.index') }}" class="usn-btn-secondary">View My Requests</a>
